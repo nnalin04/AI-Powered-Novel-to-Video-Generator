@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Novel-to-Video Generator</title>
+</head>
+<body>
+    <h1>AI Novel-to-Video Generator</h1>
+    <form method="post" enctype="multipart/form-data">
+        <label>Input Type:</label><br>
+        <input type="radio" id="text_input_radio" name="input_type" value="text" checked>
+        <label for="text_input_radio">Text Input</label><br>
+        <input type="radio" id="pdf_upload_radio" name="input_type" value="pdf">
+        <label for="pdf_upload_radio">PDF Upload</label><br>
+        <input type="radio" id="url_scraping_radio" name="input_type" value="url">
+        <label for="url_scraping_radio">URL Scraping</label><br><br>
+
+        <div id="text_input_div">
+            <label for="text_input">Text Input:</label><br>
+            <textarea name="text_input" id="text_input" rows="10" cols="50"></textarea>
+        </div>
+
+        <div id="pdf_upload_div" style="display:none;">
+            <label for="pdf_file">PDF File:</label>
+            <input type="file" name="pdf_file" id="pdf_file">
+        </div>
+        <br><br>
+
+        <label for="video_type">Video Type:</label>
+        <select name="video_type" id="video_type">
+            <option value="short">Short Video (9:16)</option>
+            <option value="full">Full-Length Video (16:9)</option>
+        </select>
+        <br><br>
+
+        <input type="submit" value="Generate Video">
+    </form>
+    </body>
+</html>
