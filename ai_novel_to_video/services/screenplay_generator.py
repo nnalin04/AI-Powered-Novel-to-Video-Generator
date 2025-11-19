@@ -2,6 +2,11 @@ import google.generativeai as genai
 import os
 import json
 import re
+from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception_type, before_sleep_log
+import logging
+
+# Setup logger for retry attempts
+logger = logging.getLogger(__name__)
 
 class ScreenplayGenerator:
     def __init__(self):
@@ -11,6 +16,13 @@ class ScreenplayGenerator:
         genai.configure(api_key=self.api_key)
         self.model = genai.GenerativeModel('gemini-1.5-pro')
 
+    @retry(
+        stop=stop_after_attempt(3),
+        wait=wait_exponential(multiplier=1, min=2, max=10),
+        retry=retry_if_exception_type((Exception,)),
+        before_sleep=before_sleep_log(logger, logging.WARNING),
+        reraise=True
+    )
     def paragraph_to_screenplay(self, paragraph):
         """Converts a paragraph into a screenplay object using Gemini API.
         

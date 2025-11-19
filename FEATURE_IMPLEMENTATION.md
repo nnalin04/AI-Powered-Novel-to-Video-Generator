@@ -67,23 +67,23 @@
 #### Task 1.2: Retry Logic with Exponential Backoff
 **Goal**: Handle transient API failures gracefully
 
-- [ ] **Subtask 1.2.1**: Add `tenacity` to requirements
+- [x] **Subtask 1.2.1**: Add `tenacity` to requirements
   - Update `requirements.txt`
   - Document retry configuration
   
-- [ ] **Subtask 1.2.2**: Implement retry decorator for `ScreenplayGenerator`
+- [x] **Subtask 1.2.2**: Implement retry decorator for `ScreenplayGenerator`
   - Add exponential backoff (max 3 retries)
   - Log retry attempts
   
-- [ ] **Subtask 1.2.3**: Implement retry decorator for `ImageGenerator`
+- [x] **Subtask 1.2.3**: Implement retry decorator for `ImageGenerator`
   - Handle quota errors specifically
   - Fallback to mock on repeated failures
   
-- [ ] **Subtask 1.2.4**: Implement retry decorator for `VoiceGenerator`
+- [x] **Subtask 1.2.4**: Implement retry decorator for `VoiceGenerator`
   - Handle rate limiting
   - Add jitter to prevent thundering herd
   
-- [ ] **Subtask 1.2.5**: Test retry logic
+- [x] **Subtask 1.2.5**: Test retry logic
   - Mock API failures
   - Verify exponential backoff timing
   - Test final failure handling

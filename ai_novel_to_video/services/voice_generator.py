@@ -1,5 +1,10 @@
 import os
 from typing import Optional
+from tenacity import retry, stop_after_attempt, wait_exponential, wait_random, retry_if_exception_type, before_sleep_log
+import logging
+
+# Setup logger for retry attempts
+logger = logging.getLogger(__name__)
 
 # Try importing google.cloud.texttospeech, but handle the case where it's not installed or credentials fail
 try:
@@ -11,6 +16,7 @@ except ImportError:
 class VoiceGenerator:
     def __init__(self):
         self.client = None
+        self.rate_limit_exceeded = False  # Track rate limit state
         
         if TTS_AVAILABLE:
             try:
@@ -21,12 +27,34 @@ class VoiceGenerator:
         else:
             print("Warning: Google Cloud TTS not available. Using Mock mode.")
 
+    @retry(
+        stop=stop_after_attempt(3),
+        wait=wait_exponential(multiplier=1, min=2, max=10) + wait_random(0, 2),  # Add jitter with wait_random
+        retry=retry_if_exception_type((Exception,)),
+        before_sleep=before_sleep_log(logger, logging.WARNING),
+        reraise=True
+    )
+    def _synthesize_with_retry(self, synthesis_input, voice, audio_config, output_path):
+        """Internal method with retry logic for TTS API calls."""
+        if self.rate_limit_exceeded:
+            raise Exception("Rate limit exceeded, using mock mode")
+        
+        response = self.client.synthesize_speech(
+            input=synthesis_input, voice=voice, audio_config=audio_config
+        )
+        
+        # The response's audio_content is binary.
+        with open(output_path, "wb") as out:
+            out.write(response.audio_content)
+        
+        return output_path
+
     def generate_voice(self, text: str, output_path: str, voice_name: str = "en-US-Journey-D") -> Optional[str]:
         """
         Generates audio from text and saves it to the output path.
         Returns the path to the saved audio or None if failed.
         """
-        if self.client:
+        if self.client and not self.rate_limit_exceeded:
             try:
                 print(f"Generating voice for: {text[:50]}...")
                 synthesis_input = texttospeech.SynthesisInput(text=text)
@@ -45,18 +73,17 @@ class VoiceGenerator:
                     audio_encoding=texttospeech.AudioEncoding.MP3
                 )
 
-                response = self.client.synthesize_speech(
-                    input=synthesis_input, voice=voice, audio_config=audio_config
-                )
-
-                # The response's audio_content is binary.
-                with open(output_path, "wb") as out:
-                    out.write(response.audio_content)
-                    
-                return output_path
+                return self._synthesize_with_retry(synthesis_input, voice, audio_config, output_path)
 
             except Exception as e:
-                print(f"Error generating voice with Google Cloud TTS: {e}")
+                error_str = str(e).lower()
+                # Check for rate limit errors
+                if 'rate limit' in error_str or 'quota' in error_str or 'resource exhausted' in error_str:
+                    print(f"Rate limit or quota exceeded for TTS. Switching to mock mode.")
+                    self.rate_limit_exceeded = True
+                else:
+                    print(f"Error generating voice with Google Cloud TTS: {e}")
+                
                 # Fallback to mock if generation fails
                 return self._generate_mock_voice(text, output_path)
         
