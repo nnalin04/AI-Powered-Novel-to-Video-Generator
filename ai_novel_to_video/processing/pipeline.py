@@ -55,23 +55,45 @@ class VideoGenerationPipeline:
             for i, segment in enumerate(segments):
                 logger.info(f"Processing segment {i+1}/{len(segments)}")
                 
-                # Screenplay (Mock/Real)
-                # screenplay = self.screenplay_generator.paragraph_to_screenplay(segment)
+                # Generate Screenplay
+                screenplay = self.screenplay_generator.paragraph_to_screenplay(segment)
+                logger.info(f"Generated screenplay for segment {i+1}")
                 
-                # Image Generation
-                image_prompt = f"Cinematic shot of: {segment[:100]}"
+                # Check if fallback was used
+                if screenplay.get('_fallback'):
+                    logger.warning(f"Screenplay parsing fallback used for segment {i+1}: {screenplay.get('_error', 'Unknown error')}")
+                
+                # Image Generation - use parsed scene_description
+                scene_desc = screenplay.get('scene_description', '')
+                if scene_desc:
+                    image_prompt = f"Cinematic shot: {scene_desc}"
+                else:
+                    # Fallback to raw text
+                    image_prompt = f"Cinematic shot of: {segment[:100]}"
+                    
                 image_path = os.path.join(output_dir, f"scene_{i+1}.png")
                 generated_image = self.image_generator.generate_image(image_prompt, image_path)
+                logger.info(f"Generated image for segment {i+1}")
                 
-                # Voice Generation
-                voice_text = f"Narrator: {segment[:200]}"
+                # Voice Generation - use parsed voiceover_text
+                voiceover_text = screenplay.get('voiceover_text', '')
+                if voiceover_text:
+                    voice_text = voiceover_text
+                else:
+                    # Fallback to raw segment
+                    voice_text = segment[:500]
+                
                 audio_path = os.path.join(output_dir, f"voice_{i+1}.mp3")
                 generated_audio = self.voice_generator.generate_voice(voice_text, audio_path)
+                logger.info(f"Generated voice for segment {i+1}")
                 
+                # Store scene with screenplay data
                 scenes.append({
                     'image': generated_image,
                     'audio': generated_audio,
-                    'text': segment
+                    'text': segment,
+                    'screenplay': screenplay, # Keep screenplay for potential future use
+                    'voiceover_text': voiceover_text if voiceover_text else segment
                 })
 
             # 3. Subtitle Generation

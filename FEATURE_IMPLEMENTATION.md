@@ -43,21 +43,21 @@
 #### Task 1.1: Screenplay JSON Parsing
 **Goal**: Parse structured screenplay output from Gemini instead of using raw text
 
-- [ ] **Subtask 1.1.1**: Update `ScreenplayGenerator` to validate JSON response format
+- [x] **Subtask 1.1.1**: Update `ScreenplayGenerator` to validate JSON response format
   - Ensure Gemini returns proper JSON with `scene_description`, `voiceover_text`, `dialogues`
   - Add fallback to raw text if JSON parsing fails
   
-- [ ] **Subtask 1.1.2**: Create `ScreenplayParser` utility class
+- [x] **Subtask 1.1.2**: Create `ScreenplayParser` utility class
   - Extract `scene_description` for image prompts
   - Extract `voiceover_text` for TTS
   - Extract `dialogues` array for character voices
   
-- [ ] **Subtask 1.1.3**: Update `VideoGenerationPipeline` to use parsed screenplay
+- [x] **Subtask 1.1.3**: Update `VideoGenerationPipeline` to use parsed screenplay
   - Replace raw segment text with `scene_description` for image generation
   - Replace narrator text with `voiceover_text` for voice generation
   - Store dialogues for future multi-voice support
   
-- [ ] **Subtask 1.1.4**: Add tests for screenplay parsing
+- [x] **Subtask 1.1.4**: Add tests for screenplay parsing
   - Test valid JSON parsing
   - Test fallback on malformed JSON
   - Test extraction of all fields

@@ -1,5 +1,7 @@
 import google.generativeai as genai
 import os
+import json
+import re
 
 class ScreenplayGenerator:
     def __init__(self):
@@ -10,34 +12,93 @@ class ScreenplayGenerator:
         self.model = genai.GenerativeModel('gemini-1.5-pro')
 
     def paragraph_to_screenplay(self, paragraph):
-        """Converts a paragraph into a screenplay object using Gemini API."""
+        """Converts a paragraph into a screenplay object using Gemini API.
+        
+        Returns:
+            dict: Parsed screenplay with scene_description, dialogues, voiceover_text
+                  Falls back to raw text structure if JSON parsing fails
+        """
         prompt = f"""Convert the following paragraph into a detailed cinematic screenplay object:
         {paragraph}
 
-        The screenplay object should include:
-        - scene_description: A detailed cinematic scene description
-        - dialogues: A list of dialogues, with each dialogue including the character and the line
-        - voiceover_text: Narration text for TTS
-
-        The output should be a JSON object with the following structure:
+        You MUST respond with ONLY a valid JSON object (no markdown, no extra text).
+        
+        The JSON structure must be:
         {{
-          "scene_description": "Detailed cinematic scene description",
+          "scene_description": "Detailed cinematic scene description for image generation",
           "dialogues": [
             {{
-              "character": "A",
-              "line": "..."
-            }},
-            {{
-              "character": "B",
-              "line": "..."
+              "character": "Character Name",
+              "line": "What the character says"
             }}
           ],
-          "voiceover_text": "Narration text for TTS"
+          "voiceover_text": "Narration text for text-to-speech"
         }}
+        
+        If there are no dialogues, use an empty array for dialogues.
+        Ensure the voiceover_text captures the essence of the paragraph for narration.
         """
 
         try:
             response = self.model.generate_content(prompt)
-            return response.text
+            response_text = response.text.strip()
+            
+            # Try to parse as JSON
+            screenplay = self._parse_json_response(response_text)
+            
+            # Validate required fields
+            if self._validate_screenplay(screenplay):
+                return screenplay
+            else:
+                # Fallback if validation fails
+                return self._create_fallback_screenplay(paragraph, response_text)
+                
         except Exception as e:
-            return f"Error generating screenplay: {e}"
+            print(f"Error generating screenplay: {e}")
+            # Return fallback structure
+            return self._create_fallback_screenplay(paragraph, str(e))
+
+    def _parse_json_response(self, response_text):
+        """Attempts to extract and parse JSON from response.
+        
+        Handles cases where Gemini wraps JSON in markdown code blocks.
+        """
+        # Remove markdown code blocks if present
+        json_match = re.search(r'```(?:json)?\s*(\{.*?\})\s*```', response_text, re.DOTALL)
+        if json_match:
+            response_text = json_match.group(1)
+        
+        # Parse JSON
+        return json.loads(response_text)
+    
+    def _validate_screenplay(self, screenplay):
+        """Validates that screenplay has required fields."""
+        if not isinstance(screenplay, dict):
+            return False
+        
+        required_fields = ['scene_description', 'dialogues', 'voiceover_text']
+        for field in required_fields:
+            if field not in screenplay:
+                return False
+        
+        # Validate dialogues structure
+        if not isinstance(screenplay['dialogues'], list):
+            return False
+        
+        for dialogue in screenplay['dialogues']:
+            if not isinstance(dialogue, dict):
+                return False
+            if 'character' not in dialogue or 'line' not in dialogue:
+                return False
+        
+        return True
+    
+    def _create_fallback_screenplay(self, paragraph, error_info=""):
+        """Creates a fallback screenplay structure when JSON parsing fails."""
+        return {
+            "scene_description": f"A scene depicting: {paragraph[:150]}...",
+            "dialogues": [],
+            "voiceover_text": paragraph[:500],  # Use first 500 chars for narration
+            "_fallback": True,
+            "_error": error_info
+        }
