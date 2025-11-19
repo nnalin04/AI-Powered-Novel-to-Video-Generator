@@ -1,17 +1,19 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>AI Novel-to-Video Generator</title>
 </head>
+
 <body>
     <h1>AI Novel-to-Video Generator</h1>
-    <form method="post" enctype="multipart/form-data">
+    <form method="post" enctype="multipart/form-data" onsubmit="showLoading()">
         <label>Input Type:</label><br>
-        <input type="radio" id="text_input_radio" name="input_type" value="text" checked>
+        <input type="radio" id="text_input_radio" name="input_type" value="text" checked onchange="toggleInputs()">
         <label for="text_input_radio">Text Input</label><br>
-        <input type="radio" id="pdf_upload_radio" name="input_type" value="pdf">
+        <input type="radio" id="pdf_upload_radio" name="input_type" value="pdf" onchange="toggleInputs()">
         <label for="pdf_upload_radio">PDF Upload</label><br>
-        <input type="radio" id="url_scraping_radio" name="input_type" value="url">
+        <input type="radio" id="url_scraping_radio" name="input_type" value="url" onchange="toggleInputs()">
         <label for="url_scraping_radio">URL Scraping</label><br><br>
 
         <div id="text_input_div">
@@ -22,6 +24,11 @@
         <div id="pdf_upload_div" style="display:none;">
             <label for="pdf_file">PDF File:</label>
             <input type="file" name="pdf_file" id="pdf_file">
+        </div>
+
+        <div id="url_input_div" style="display:none;">
+            <label for="url_input">URL:</label>
+            <input type="text" name="url_input" id="url_input" size="50">
         </div>
         <br><br>
 
@@ -34,5 +41,38 @@
 
         <input type="submit" value="Generate Video">
     </form>
-    </body>
+
+    <div id="loading" style="display:none; margin-top: 20px;">
+        <div
+            style="border: 4px solid #f3f3f3; border-top: 4px solid #3498db; border-radius: 50%; width: 30px; height: 30px; animation: spin 2s linear infinite; display: inline-block; vertical-align: middle;">
+        </div>
+        <span style="margin-left: 10px; font-size: 18px;">Generating Video... This may take a few minutes.</span>
+    </div>
+
+    <style>
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+
+    <script>
+        function toggleInputs() {
+            const inputType = document.querySelector('input[name="input_type"]:checked').value;
+            document.getElementById('text_input_div').style.display = inputType === 'text' ? 'block' : 'none';
+            document.getElementById('pdf_upload_div').style.display = inputType === 'pdf' ? 'block' : 'none';
+            document.getElementById('url_input_div').style.display = inputType === 'url' ? 'block' : 'none';
+        }
+
+        function showLoading() {
+            document.getElementById('loading').style.display = 'block';
+        }
+    </script>
+</body>
+
 </html>
