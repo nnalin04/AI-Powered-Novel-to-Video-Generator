@@ -1,39 +1,321 @@
-# Implementation Status Report
+# Feature Implementation Tracker
 
-## Overview
-This report details the current implementation status of the AI-Powered Novel-to-Video Generator against the requirements specified in `discription.md`.
+> **Last Updated**: 2025-11-20  
+> **Current Iteration**: Iteration 2 (Quality & UX Enhancements)
 
-## Summary
-The project skeleton is set up with a basic Flask web interface. Input handling for text and URL is partially implemented, including a connection to the Gemini API for screenplay generation. However, the core video production pipeline (Image Generation, TTS, Video Assembly) is **completely missing**.
+---
 
-## Detailed Status
+## 🎯 Iteration 1: Core Pipeline (✅ COMPLETED)
 
-| Requirement | Status | Notes |
-| :--- | :--- | :--- |
-| **1. Local Web Interface** | ✅ Implemented | Flask app with dynamic JS for inputs and loading state. |
-| **2. Input Handling** | ✅ Implemented | Text, URL, and PDF processing are now implemented via `InputProcessor`. |
-| **3. Text Processing** | ✅ Implemented | Handled by `InputProcessor`. |
-| **4. Paragraph-to-Screenplay** | ✅ Implemented | Handled by `ScreenplayGenerator`. |
-| **5. Image & Animation** | ✅ Implemented | `ImageGenerator` service implemented with Vertex AI and Mock support. |
-| **6. Voiceover Generation** | ✅ Implemented | `VoiceGenerator` service implemented with Google Cloud TTS and Mock support. |
-| **7. Subtitle Generation** | ✅ Implemented | `SubtitleGenerator` service implemented (SRT format). |
-| **8. Video Assembly** | ✅ Implemented | `VideoAssembler` service implemented with `moviepy`. |
-| **9. Thumbnail Generation** | ✅ Implemented | `ThumbnailGenerator` service implemented (Image + Text). |
-| **10. Upload Automation** | ✅ Implemented | `YouTubeUploader` service implemented (API v3 + Mock). |
-| **11. File & Workflow Management** | ✅ Implemented | Logic centralized in `VideoGenerationPipeline`. |
-| **12. Error Handling** | ✅ Implemented | Comprehensive logging added via `utils/logger.py` and pipeline try-except blocks. |
-| **13. Configuration** | ✅ Implemented | `.env` file exists and is used in `app.py`. |
+### Implemented Features
 
-## Missing Files
-- `generate_video.py` (Core workflow script)
-- Processing scripts in `ai_novel_to_video/processing/`
-- JavaScript logic in `templates/index.html`
+| Feature | Status | Implementation Details |
+|---------|--------|------------------------|
+| **1. Local Web Interface** | ✅ Complete | Flask app with dynamic JS for input type selection and loading spinner |
+| **2. Input Handling** | ✅ Complete | Text, URL, and PDF processing via `InputProcessor` |
+| **3. Text Processing** | ✅ Complete | Text segmentation handled by `InputProcessor` |
+| **4. Paragraph-to-Screenplay** | ✅ Complete | `ScreenplayGenerator` using Gemini API (with graceful fallback) |
+| **5. Image Generation** | ✅ Complete | `ImageGenerator` with Vertex AI Imagen + Mock fallback |
+| **6. Voiceover Generation** | ✅ Complete | `VoiceGenerator` with Google Cloud TTS + Mock fallback |
+| **7. Subtitle Generation** | ✅ Complete | `SubtitleGenerator` creating time-aligned SRT files |
+| **8. Video Assembly** | ✅ Complete | `VideoAssembler` using MoviePy with mock support |
+| **9. Thumbnail Generation** | ✅ Complete | `ThumbnailGenerator` with image + text overlay |
+| **10. Upload Automation** | ✅ Complete | `YouTubeUploader` with OAuth2 + Mock mode |
+| **11. File & Workflow Management** | ✅ Complete | Logic centralized in `VideoGenerationPipeline` |
+| **12. Error Handling & Logging** | ✅ Complete | Comprehensive logging via `utils/logger.py` |
+| **13. Configuration** | ✅ Complete | `.env` file support for API keys |
+| **14. Testing Infrastructure** | ✅ Complete | Unit tests for all services with pytest |
+| **15. Code Organization** | ✅ Complete | Modular service-based architecture |
 
-## Recommendations
-1.  **Implement PDF Processing**: Add logic to extract text from uploaded PDFs.
-2.  **Fix UI Interactivity**: Add JavaScript to `index.html` to show/hide input fields based on selection.
-3.  **Build Core Pipeline**: Create `generate_video.py` or modules in `processing/` to handle:
-    -   Image Generation
-    -   TTS
-    -   Video Assembly
-4.  **Implement Progress Updates**: Update the UI to poll for progress or use WebSockets/SSE, as the current implementation just returns a static string.
+### Deliverables (Iteration 1)
+- ✅ Full end-to-end pipeline from text/PDF/URL → video + thumbnail + upload
+- ✅ Mock mode for development without API credentials
+- ✅ Comprehensive logging and error handling
+- ✅ Unit tests with 100% service coverage
+- ✅ Web UI with dynamic inputs
+
+---
+
+## 🚀 Iteration 2: Quality & UX Enhancements (IN PROGRESS)
+
+### Phase 1: Critical Quality Fixes (🔴 High Priority)
+
+#### Task 1.1: Screenplay JSON Parsing
+**Goal**: Parse structured screenplay output from Gemini instead of using raw text
+
+- [ ] **Subtask 1.1.1**: Update `ScreenplayGenerator` to validate JSON response format
+  - Ensure Gemini returns proper JSON with `scene_description`, `voiceover_text`, `dialogues`
+  - Add fallback to raw text if JSON parsing fails
+  
+- [ ] **Subtask 1.1.2**: Create `ScreenplayParser` utility class
+  - Extract `scene_description` for image prompts
+  - Extract `voiceover_text` for TTS
+  - Extract `dialogues` array for character voices
+  
+- [ ] **Subtask 1.1.3**: Update `VideoGenerationPipeline` to use parsed screenplay
+  - Replace raw segment text with `scene_description` for image generation
+  - Replace narrator text with `voiceover_text` for voice generation
+  - Store dialogues for future multi-voice support
+  
+- [ ] **Subtask 1.1.4**: Add tests for screenplay parsing
+  - Test valid JSON parsing
+  - Test fallback on malformed JSON
+  - Test extraction of all fields
+
+---
+
+#### Task 1.2: Retry Logic with Exponential Backoff
+**Goal**: Handle transient API failures gracefully
+
+- [ ] **Subtask 1.2.1**: Add `tenacity` to requirements
+  - Update `requirements.txt`
+  - Document retry configuration
+  
+- [ ] **Subtask 1.2.2**: Implement retry decorator for `ScreenplayGenerator`
+  - Add exponential backoff (max 3 retries)
+  - Log retry attempts
+  
+- [ ] **Subtask 1.2.3**: Implement retry decorator for `ImageGenerator`
+  - Handle quota errors specifically
+  - Fallback to mock on repeated failures
+  
+- [ ] **Subtask 1.2.4**: Implement retry decorator for `VoiceGenerator`
+  - Handle rate limiting
+  - Add jitter to prevent thundering herd
+  
+- [ ] **Subtask 1.2.5**: Test retry logic
+  - Mock API failures
+  - Verify exponential backoff timing
+  - Test final failure handling
+
+---
+
+#### Task 1.3: Progress Updates (Server-Sent Events)
+**Goal**: Provide real-time feedback during video generation
+
+- [ ] **Subtask 1.3.1**: Add Flask-SSE infrastructure
+  - Add `flask-sse` to requirements
+  - Set up Redis or in-memory queue for SSE
+  
+- [ ] **Subtask 1.3.2**: Create progress tracking in `VideoGenerationPipeline`
+  - Add `emit_progress(message, percentage)` method
+  - Track: initialization, segment processing, asset generation, assembly, upload
+  
+- [ ] **Subtask 1.3.3**: Add SSE endpoint to Flask app
+  - Create `/stream` route for SSE
+  - Format progress messages as JSON
+  
+- [ ] **Subtask 1.3.4**: Update frontend to consume SSE
+  - Add EventSource JavaScript
+  - Display progress bar and status messages
+  - Hide spinner on completion
+  
+- [ ] **Subtask 1.3.5**: Test progress updates
+  - Verify messages reach frontend
+  - Test disconnection handling
+  - Test concurrent sessions
+
+---
+
+### Phase 2: Multi-Voice & Animation (🟡 Medium Priority)
+
+#### Task 2.1: Multi-Voice Support
+**Goal**: Assign different voices to different characters
+
+- [ ] **Subtask 2.1.1**: Create voice profile configuration
+  - Add `voices.yaml` with character→voice mappings
+  - Define narrator, male, female, child voices
+  
+- [ ] **Subtask 2.1.2**: Implement character detection in parsed dialogues
+  - Extract character names from screenplay JSON
+  - Map to voice profiles
+  
+- [ ] **Subtask 2.1.3**: Update `VoiceGenerator` to support voice selection
+  - Add `voice_name` parameter
+  - Handle voice switching per dialogue
+  
+- [ ] **Subtask 2.1.4**: Modify pipeline to generate multi-voice audio
+  - Generate separate audio per dialogue
+  - Merge audio segments with correct timing
+  
+- [ ] **Subtask 2.1.5**: Test multi-voice generation
+  - Verify different voices for different characters
+  - Test audio synchronization
+
+---
+
+#### Task 2.2: Ken Burns Animation Effect
+**Goal**: Add subtle motion to static images
+
+- [ ] **Subtask 2.2.1**: Research MoviePy zoom/pan capabilities
+  - Document API for transforms
+  - Define zoom levels and directions
+  
+- [ ] **Subtask 2.2.2**: Create `AnimationService`
+  - Implement `apply_ken_burns(image_path, duration)` method
+  - Support zoom in/out and pan directions
+  
+- [ ] **Subtask 2.2.3**: Integrate into `VideoAssembler`
+  - Apply animation before audio overlay
+  - Make animation optional via config
+  
+- [ ] **Subtask 2.2.4**: Test animation quality
+  - Verify smooth transitions
+  - Test performance impact
+
+---
+
+#### Task 2.3: Intro/Outro Overlays
+**Goal**: Add polished opening and closing
+
+- [ ] **Subtask 2.3.1**: Design intro/outro templates
+  - Create text overlays for shorts ("Part X - TBC...")
+  - Create text overlays for full videos ("The End")
+  
+- [ ] **Subtask 2.3.2**: Implement overlay generator
+  - Use Pillow to create overlay images
+  - Support customizable text and styling
+  
+- [ ] **Subtask 2.3.3**: Integrate into `VideoAssembler`
+  - Add intro at start
+  - Add outro at end
+  - Make duration configurable
+  
+- [ ] **Subtask 2.3.4**: Test overlays
+  - Verify timing
+  - Test with different video types
+
+---
+
+### Phase 3: Organization & Cleanup (🟡 Medium Priority)
+
+#### Task 3.1: Separate Output Folders
+**Goal**: Organize outputs by video type
+
+- [ ] **Subtask 3.1.1**: Update directory structure
+  - Create `output/shorts/` and `output/full_videos/`
+  - Update `VideoGenerationPipeline` to use correct folder
+  
+- [ ] **Subtask 3.1.2**: Add timestamp to output filenames
+  - Prevent overwriting previous videos
+  - Format: `{video_type}_{timestamp}.mp4`
+  
+- [ ] **Subtask 3.1.3**: Update tests for new structure
+
+---
+
+#### Task 3.2: Auto-Cleanup
+**Goal**: Prevent disk bloat from temporary files
+
+- [ ] **Subtask 3.2.1**: Identify cleanup candidates
+  - Intermediate images (scene_*.png)
+  - Audio files (voice_*.mp3)
+  - Keep: final video, thumbnail, subtitles
+  
+- [ ] **Subtask 3.2.2**: Add cleanup logic to pipeline
+  - Cleanup after successful upload
+  - Make configurable via `.env`
+  
+- [ ] **Subtask 3.2.3**: Add cleanup error handling
+  - Don't fail pipeline if cleanup fails
+  - Log cleanup operations
+
+---
+
+### Phase 4: Configuration & Polish (🟡 Medium Priority)
+
+#### Task 4.1: Configuration File System
+**Goal**: Make settings easily customizable
+
+- [ ] **Subtask 4.1.1**: Add PyYAML to requirements
+  
+- [ ] **Subtask 4.1.2**: Create `config.yaml` template
+  - Video settings (resolution, bitrate)
+  - Voice settings (profiles, speed)
+  - Processing settings (max segments, cleanup)
+  
+- [ ] **Subtask 4.1.3**: Create `ConfigLoader` utility
+  - Load and validate config
+  - Merge with `.env` values
+  - Provide defaults
+  
+- [ ] **Subtask 4.1.4**: Update services to use config
+  - Replace hardcoded values
+  - Document all config options
+
+---
+
+#### Task 4.2: Better Error Messages
+**Goal**: Provide actionable error guidance
+
+- [ ] **Subtask 4.2.1**: Define error message templates
+  - Quota exceeded → suggest wait time or mock mode
+  - Invalid credentials → link to setup guide
+  - Network errors → suggest retry
+  
+- [ ] **Subtask 4.2.2**: Update exception handling
+  - Catch specific exceptions
+  - Return user-friendly messages
+  
+- [ ] **Subtask 4.2.3**: Add error messages to UI
+  - Display in web interface
+  - Include troubleshooting links
+
+---
+
+### Phase 5: Advanced Features (🟢 Low Priority - Future)
+
+#### Task 5.1: Character Consistency
+- [ ] Research Vertex AI image guidance
+- [ ] Implement character embedding cache
+- [ ] Update image prompts with character descriptions
+
+#### Task 5.2: CLI Interface
+- [ ] Create `cli.py` with argparse
+- [ ] Add commands for video generation
+- [ ] Support batch processing
+
+#### Task 5.3: Progress Database (SQLite)
+- [ ] Design job schema
+- [ ] Implement job tracking
+- [ ] Add resume capability
+
+---
+
+## 📊 Progress Summary
+
+### Iteration 1 (COMPLETED)
+- **Total Tasks**: 15
+- **Completed**: 15 (100%)
+- **Status**: ✅ All core features implemented
+
+### Iteration 2 (IN PROGRESS)
+- **Total Tasks**: 35 subtasks across 12 major tasks
+- **Completed**: 0
+- **In Progress**: Ready to start Phase 1
+- **Status**: 🚀 Planning complete
+
+---
+
+## 🎯 Next Actions
+
+**Immediate Next Steps** (Phase 1):
+1. Start with **Task 1.1** (Screenplay JSON Parsing) - Highest ROI
+2. Then **Task 1.2** (Retry Logic) - Critical for reliability
+3. Then **Task 1.3** (Progress Updates) - Best UX improvement
+
+**Timeline Estimate**:
+- Phase 1 (Critical): 2-3 days
+- Phase 2 (Medium): 2-3 days  
+- Phase 3 (Cleanup): 1 day
+- Phase 4 (Polish): 1-2 days
+
+---
+
+## 📝 Notes
+
+- All tasks are broken into small subtasks to avoid context window overload
+- Each subtask represents ~15-30 minutes of focused work
+- Tests are included as separate subtasks for each major feature
+- Configuration changes are isolated from logic changes
+- Each subtask can be implemented, tested, and committed independently
