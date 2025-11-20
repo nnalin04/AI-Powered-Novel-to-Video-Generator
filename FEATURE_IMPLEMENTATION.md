@@ -126,7 +126,7 @@
 - [x] **Subtask 2.1.4**: Modify pipeline to generate multi-voice audio
   - Generate separate audio per dialogue
   - Merge audio segments with correct timing
-- [ ] **Subtask 2.1.5**: Test multi-voice generation
+- [x] **Subtask 2.1.5**: Test multi-voice generation
   - Verify different voices for different characters
   - Test audio synchronization
 
@@ -136,13 +136,13 @@
 
 **Goal**: Add subtle motion to static images
 
-- [ ] **Subtask 2.2.1**: Research MoviePy zoom/pan capabilities
+- [x] **Subtask 2.2.1**: Research MoviePy zoom/pan capabilities
   - Document API for transforms
   - Define zoom levels and directions
-- [ ] **Subtask 2.2.2**: Create `AnimationService`
+- [x] **Subtask 2.2.2**: Create `AnimationService`
   - Implement `apply_ken_burns(image_path, duration)` method
   - Support zoom in/out and pan directions
-- [ ] **Subtask 2.2.3**: Integrate into `VideoAssembler`
+- [x] **Subtask 2.2.3**: Integrate into `VideoAssembler`
   - Apply animation before audio overlay
   - Make animation optional via config
 - [ ] **Subtask 2.2.4**: Test animation quality

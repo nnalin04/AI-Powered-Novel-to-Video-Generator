@@ -1,5 +1,6 @@
 import os
 from typing import List, Dict, Optional
+from ai_novel_to_video.services.animation_service import AnimationService
 
 try:
     # Try moviepy 2.0+ imports
@@ -15,6 +16,7 @@ except ImportError:
 
 class VideoAssembler:
     def __init__(self):
+        self.animation_service = AnimationService()
         if not MOVIEPY_AVAILABLE:
             print("Warning: MoviePy not installed. Video assembly will be mocked.")
 
@@ -47,11 +49,18 @@ class VideoAssembler:
                     audio_clip = AudioFileClip(audio_path)
                     duration = audio_clip.duration
                     
-                    # Create Image Clip with same duration
-                    image_clip = ImageClip(image_path).set_duration(duration)
-                    image_clip = image_clip.set_audio(audio_clip)
+                    # Create Video Clip (with Animation)
+                    # Try to apply Ken Burns effect
+                    video_clip = self.animation_service.apply_ken_burns(image_path, duration)
                     
-                    clips.append(image_clip)
+                    if not video_clip:
+                        # Fallback to static image if animation fails or returns None
+                        video_clip = ImageClip(image_path).with_duration(duration)
+                    
+                    # Set audio
+                    video_clip = video_clip.with_audio(audio_clip)
+                    
+                    clips.append(video_clip)
 
                 if not clips:
                     print("Error: No valid clips created.")
@@ -73,6 +82,8 @@ class VideoAssembler:
 
             except Exception as e:
                 print(f"Error assembling video with MoviePy: {e}")
+                import traceback
+                traceback.print_exc()
                 return self._mock_assemble_video(scenes, output_path)
         
         return self._mock_assemble_video(scenes, output_path)

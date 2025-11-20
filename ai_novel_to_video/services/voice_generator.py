@@ -2,11 +2,13 @@ import os
 from typing import Optional
 from tenacity import retry, stop_after_attempt, wait_exponential, wait_random, retry_if_exception_type, before_sleep_log
 import logging
+import yaml
+import tempfile
+import shutil
+from moviepy import concatenate_audioclips, AudioFileClip
 
 # Setup logger for retry attempts
 logger = logging.getLogger(__name__)
-
-import yaml
 
 # Try importing google.cloud.texttospeech, but handle the case where it's not installed or credentials fail
 try:
@@ -159,13 +161,50 @@ class VoiceGenerator:
     def _generate_mock_voice(self, text: str, output_path: str) -> str:
         """Generates a placeholder audio file (empty or simple tone) for testing."""
         print(f"Mock Generating voice for: {text[:50]}...")
-        # Create a dummy text file pretending to be mp3 for now, or a minimal valid mp3 header if needed.
-        # For simplicity in this prototype, we'll just write text content to the file 
-        # but give it .mp3 extension so the pipeline sees a file. 
-        # In a real app, we might copy a static 'silent.mp3' asset.
         
-        with open(output_path, 'w') as f:
-            f.write(f"Mock Audio Content for: {text}")
+        try:
+            from moviepy import AudioClip
+            import numpy as np
+            
+            # Generate 3 seconds of silence (or a sine wave if we wanted sound)
+            duration = 3.0
+            
+            def make_frame(t):
+                return np.sin(2 * np.pi * 440 * t) * 0.1 # Sine wave at 440Hz, low volume
+                
+            # Create a mono audio clip
+            # Note: make_frame for audio returns a numpy array of shape (n_samples, n_channels) or just (n_samples)
+            # MoviePy v2 might expect (n_samples, n_channels)
+            
+            # Let's just make silence to be safe and simple
+            # clip = AudioClip(lambda t: [0], duration=duration) # Mono silence
+            
+            # Actually, let's use a sine wave so we can hear it if needed
+            # 44100 Hz
+            
+            # Simple way: create a silent clip
+            # from moviepy.audio.AudioClip import AudioClip
+            
+            # Let's try to create a valid MP3 using moviepy
+            # Since we already imported moviepy at top level
+            
+            # We need to handle the case where moviepy might not be fully set up or numpy missing
+            # But we are in a dev environment where we installed requirements.
+            
+            # Create a 2-second silent clip
+            # In MoviePy v2, AudioClip takes a make_frame function
+            
+            def sine_tone(t):
+                return [np.sin(2 * np.pi * 440 * t) * 0.1] # Mono
+                
+            clip = AudioClip(sine_tone, duration=2.0)
+            clip.write_audiofile(output_path, fps=44100, logger=None)
+            
+        except Exception as e:
+            print(f"Error generating mock audio with MoviePy: {e}")
+            # Fallback to text file if moviepy fails (but this will break downstream)
+            with open(output_path, 'w') as f:
+                f.write(f"Mock Audio Content for: {text}")
         
         return output_path
 
@@ -188,10 +227,6 @@ class VoiceGenerator:
              return output_path
 
         # Real generation
-        import tempfile
-        import shutil
-        from moviepy.editor import concatenate_audioclips, AudioFileClip
-
         temp_files = []
         clips = []
         temp_dir = None
