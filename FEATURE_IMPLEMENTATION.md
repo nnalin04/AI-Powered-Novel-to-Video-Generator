@@ -120,7 +120,7 @@
 - [x] **Subtask 2.1.2**: Implement character detection in parsed dialogues
   - Extract character names from screenplay JSON
   - Map to voice profiles
-- [ ] **Subtask 2.1.3**: Update `VoiceGenerator` to support voice selection
+- [x] **Subtask 2.1.3**: Update `VoiceGenerator` to support voice selection
   - Add `voice_name` parameter
   - Handle voice switching per dialogue
 - [ ] **Subtask 2.1.4**: Modify pipeline to generate multi-voice audio

@@ -99,20 +99,35 @@ class VoiceGenerator:
         
         return output_path
 
-    def generate_voice(self, text: str, output_path: str, voice_name: str = "en-US-Journey-D") -> Optional[str]:
+    def generate_voice(self, text: str, output_path: str, voice_name: str = "en-US-Journey-D", voice_params: dict = None) -> Optional[str]:
         """
         Generates audio from text and saves it to the output path.
         Returns the path to the saved audio or None if failed.
+        
+        Args:
+            text: The text to synthesize.
+            output_path: Path to save the MP3 file.
+            voice_name: Default voice name if voice_params is not provided.
+            voice_params: Dictionary containing voice configuration (name, language_code, speaking_rate, pitch).
         """
         if self.client and not self.rate_limit_exceeded:
             try:
                 print(f"Generating voice for: {text[:50]}...")
                 synthesis_input = texttospeech.SynthesisInput(text=text)
 
-                # Build the voice request
-                # Check if voice_name contains language code, else default to en-US
-                language_code = "-".join(voice_name.split("-")[:2]) if "-" in voice_name else "en-US"
+                # Determine voice settings
+                language_code = "en-US"
+                speaking_rate = 1.0
+                pitch = 0.0
                 
+                if voice_params:
+                    voice_name = voice_params.get('name', voice_name)
+                    language_code = voice_params.get('language_code', "en-US")
+                    speaking_rate = voice_params.get('speaking_rate', 1.0)
+                    pitch = voice_params.get('pitch', 0.0)
+                elif "-" in voice_name:
+                     language_code = "-".join(voice_name.split("-")[:2])
+
                 voice = texttospeech.VoiceSelectionParams(
                     language_code=language_code,
                     name=voice_name
@@ -120,7 +135,9 @@ class VoiceGenerator:
 
                 # Select the type of audio file you want returned
                 audio_config = texttospeech.AudioConfig(
-                    audio_encoding=texttospeech.AudioEncoding.MP3
+                    audio_encoding=texttospeech.AudioEncoding.MP3,
+                    speaking_rate=speaking_rate,
+                    pitch=pitch
                 )
 
                 return self._synthesize_with_retry(synthesis_input, voice, audio_config, output_path)
