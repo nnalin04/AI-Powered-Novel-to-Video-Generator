@@ -117,7 +117,7 @@
 - [x] **Subtask 2.1.1**: Create voice profile configuration
   - Add `voices.yaml` with character→voice mappings
   - Define narrator, male, female, child voices
-- [ ] **Subtask 2.1.2**: Implement character detection in parsed dialogues
+- [x] **Subtask 2.1.2**: Implement character detection in parsed dialogues
   - Extract character names from screenplay JSON
   - Map to voice profiles
 - [ ] **Subtask 2.1.3**: Update `VoiceGenerator` to support voice selection

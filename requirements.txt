@@ -7,8 +7,9 @@ python-dotenv
 pytest
 google-cloud-aiplatform
 google-cloud-texttospeech
-moviepy
-Pillow
-google-auth-oauthlib
 google-api-python-client
-tenacity  # For retry logic with exponential backoff
+google-auth-oauthlib
+google-auth-httplib2
+moviepy
+tenacity
+PyYAML
