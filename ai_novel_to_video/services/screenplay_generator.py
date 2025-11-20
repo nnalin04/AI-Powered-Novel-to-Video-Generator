@@ -38,17 +38,22 @@ class ScreenplayGenerator:
         The JSON structure must be:
         {{
           "scene_description": "Detailed cinematic scene description for image generation",
-          "dialogues": [
+          "audio_script": [
             {{
-              "character": "Character Name",
-              "line": "What the character says"
+              "speaker": "Narrator",
+              "text": "Narration text..."
+            }},
+            {{
+              "speaker": "Character Name",
+              "text": "Dialogue line..."
             }}
           ],
-          "voiceover_text": "Narration text for text-to-speech"
+          "dialogues": [], 
+          "voiceover_text": "Full narration text (legacy support)"
         }}
         
-        If there are no dialogues, use an empty array for dialogues.
-        Ensure the voiceover_text captures the essence of the paragraph for narration.
+        The 'audio_script' should be an ordered list of all spoken parts, including narration and character dialogue, in the correct sequence.
+        If there are no dialogues, 'audio_script' should contain just the Narrator part.
         """
 
         try:
@@ -88,19 +93,21 @@ class ScreenplayGenerator:
         if not isinstance(screenplay, dict):
             return False
         
+        # Check for audio_script (new format)
+        if 'audio_script' in screenplay:
+            if not isinstance(screenplay['audio_script'], list):
+                return False
+            for segment in screenplay['audio_script']:
+                if not isinstance(segment, dict):
+                    return False
+                if 'speaker' not in segment or 'text' not in segment:
+                    return False
+            return True
+            
+        # Legacy check
         required_fields = ['scene_description', 'dialogues', 'voiceover_text']
         for field in required_fields:
             if field not in screenplay:
-                return False
-        
-        # Validate dialogues structure
-        if not isinstance(screenplay['dialogues'], list):
-            return False
-        
-        for dialogue in screenplay['dialogues']:
-            if not isinstance(dialogue, dict):
-                return False
-            if 'character' not in dialogue or 'line' not in dialogue:
                 return False
         
         return True
@@ -109,8 +116,11 @@ class ScreenplayGenerator:
         """Creates a fallback screenplay structure when JSON parsing fails."""
         return {
             "scene_description": f"A scene depicting: {paragraph[:150]}...",
+            "audio_script": [
+                {"speaker": "Narrator", "text": paragraph[:500]}
+            ],
             "dialogues": [],
-            "voiceover_text": paragraph[:500],  # Use first 500 chars for narration
+            "voiceover_text": paragraph[:500],
             "_fallback": True,
             "_error": error_info
         }
