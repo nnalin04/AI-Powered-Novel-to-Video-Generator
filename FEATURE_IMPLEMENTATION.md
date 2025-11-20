@@ -123,7 +123,7 @@
 - [x] **Subtask 2.1.3**: Update `VoiceGenerator` to support voice selection
   - Add `voice_name` parameter
   - Handle voice switching per dialogue
-- [ ] **Subtask 2.1.4**: Modify pipeline to generate multi-voice audio
+- [x] **Subtask 2.1.4**: Modify pipeline to generate multi-voice audio
   - Generate separate audio per dialogue
   - Merge audio segments with correct timing
 - [ ] **Subtask 2.1.5**: Test multi-voice generation

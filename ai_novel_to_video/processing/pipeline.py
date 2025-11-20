@@ -93,26 +93,38 @@ class VideoGenerationPipeline:
                 generated_image = self.image_generator.generate_image(image_prompt, image_path)
                 logger.info(f"Generated image for segment {i+1}")
                 
-                # Voice Generation - use parsed voiceover_text
+                # Voice Generation
                 report_progress(f"Processing segment {i+1}/{len(segments)}: Generating Voice...", current_loop_progress + (progress_per_segment * 0.6), total_steps)
-                voiceover_text = screenplay.get('voiceover_text', '')
-                if voiceover_text:
-                    voice_text = voiceover_text
-                else:
-                    # Fallback to raw segment
-                    voice_text = segment[:500]
                 
                 audio_path = os.path.join(output_dir, f"voice_{i+1}.mp3")
-                generated_audio = self.voice_generator.generate_voice(voice_text, audio_path)
+                audio_script = screenplay.get('audio_script')
+                full_spoken_text = ""
+
+                if audio_script and isinstance(audio_script, list) and len(audio_script) > 0:
+                    logger.info(f"Generating multi-voice conversation for segment {i+1}")
+                    generated_audio = self.voice_generator.generate_conversation(audio_script, audio_path)
+                    # Construct full text for subtitles
+                    full_spoken_text = " ".join([seg.get('text', '') for seg in audio_script])
+                else:
+                    # Fallback to single voice
+                    voiceover_text = screenplay.get('voiceover_text', '')
+                    if not voiceover_text:
+                        voiceover_text = segment[:500]
+                    
+                    full_spoken_text = voiceover_text
+                    logger.info(f"Generating single voice for segment {i+1}")
+                    generated_audio = self.voice_generator.generate_voice(voiceover_text, audio_path)
+                
                 logger.info(f"Generated voice for segment {i+1}")
                 
                 # Store scene with screenplay data
                 scenes.append({
                     'image': generated_image,
                     'audio': generated_audio,
-                    'text': segment,
-                    'screenplay': screenplay, # Keep screenplay for potential future use
-                    'voiceover_text': voiceover_text if voiceover_text else segment
+                    'text': full_spoken_text, # Use spoken text for subtitles
+                    'screenplay': screenplay, 
+                    'voiceover_text': full_spoken_text,
+                    'raw_segment': segment
                 })
 
             # 3. Subtitle Generation
