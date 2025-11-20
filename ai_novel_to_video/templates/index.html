@@ -1,65 +1,215 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Novel-to-Video Generator</title>
+    <style>
+        :root {
+            --bg-color: #1a1a1a;
+            --card-bg: #2d2d2d;
+            --text-color: #e0e0e0;
+            --accent-color: #3498db;
+            --accent-hover: #2980b9;
+            --border-color: #404040;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: var(--card-bg);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 600px;
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--accent-color);
+            margin-bottom: 30px;
+            font-weight: 300;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+        }
+
+        input[type="text"],
+        textarea,
+        select,
+        input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            background-color: #333;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            color: white;
+            box-sizing: border-box;
+            margin-top: 5px;
+        }
+
+        input[type="radio"] {
+            margin-right: 10px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: var(--accent-hover);
+        }
+
+        button:disabled {
+            background-color: #555;
+            cursor: not-allowed;
+        }
+
+        /* Progress Section */
+        #progress-section {
+            display: none;
+            margin-top: 30px;
+            border-top: 1px solid var(--border-color);
+            padding-top: 20px;
+        }
+
+        progress {
+            width: 100%;
+            height: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        progress::-webkit-progress-bar {
+            background-color: #333;
+        }
+
+        progress::-webkit-progress-value {
+            background-color: var(--accent-color);
+            transition: width 0.5s ease;
+        }
+
+        #status-log {
+            background-color: #111;
+            padding: 15px;
+            border-radius: 6px;
+            height: 150px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 14px;
+            margin-top: 15px;
+            border: 1px solid var(--border-color);
+        }
+
+        .log-entry {
+            margin-bottom: 5px;
+            border-bottom: 1px solid #222;
+            padding-bottom: 2px;
+        }
+
+        .success-msg {
+            color: #2ecc71;
+            font-weight: bold;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        .error-msg {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+    </style>
 </head>
 
 <body>
-    <h1>AI Novel-to-Video Generator</h1>
-    <form method="post" enctype="multipart/form-data" onsubmit="showLoading()">
-        <label>Input Type:</label><br>
-        <input type="radio" id="text_input_radio" name="input_type" value="text" checked onchange="toggleInputs()">
-        <label for="text_input_radio">Text Input</label><br>
-        <input type="radio" id="pdf_upload_radio" name="input_type" value="pdf" onchange="toggleInputs()">
-        <label for="pdf_upload_radio">PDF Upload</label><br>
-        <input type="radio" id="url_scraping_radio" name="input_type" value="url" onchange="toggleInputs()">
-        <label for="url_scraping_radio">URL Scraping</label><br><br>
 
-        <div id="text_input_div">
-            <label for="text_input">Text Input:</label><br>
-            <textarea name="text_input" id="text_input" rows="10" cols="50"></textarea>
+    <div class="container">
+        <h1>AI Novel-to-Video</h1>
+
+        <form id="generate-form">
+            <div class="input-group">
+                <label>Input Source:</label>
+                <div style="display: flex; gap: 15px;">
+                    <div>
+                        <input type="radio" id="text_input_radio" name="input_type" value="text" checked
+                            onchange="toggleInputs()">
+                        <label for="text_input_radio" style="display:inline;">Text</label>
+                    </div>
+                    <div>
+                        <input type="radio" id="pdf_upload_radio" name="input_type" value="pdf"
+                            onchange="toggleInputs()">
+                        <label for="pdf_upload_radio" style="display:inline;">PDF</label>
+                    </div>
+                    <div>
+                        <input type="radio" id="url_scraping_radio" name="input_type" value="url"
+                            onchange="toggleInputs()">
+                        <label for="url_scraping_radio" style="display:inline;">URL</label>
+                    </div>
+                </div>
+            </div>
+
+            <div id="text_input_div" class="input-group">
+                <label for="text_input">Paste Story Text:</label>
+                <textarea name="text_input" id="text_input" rows="6" placeholder="Enter your story here..."></textarea>
+            </div>
+
+            <div id="pdf_upload_div" class="input-group" style="display:none;">
+                <label for="pdf_file">Upload PDF:</label>
+                <input type="file" name="pdf_file" id="pdf_file" accept=".pdf">
+            </div>
+
+            <div id="url_input_div" class="input-group" style="display:none;">
+                <label for="url_input">Story URL:</label>
+                <input type="text" name="url_input" id="url_input" placeholder="https://example.com/story">
+            </div>
+
+            <div class="input-group">
+                <label for="video_type">Video Format:</label>
+                <select name="video_type" id="video_type">
+                    <option value="short">🎬 Short Video (9:16) - TikTok/Reels</option>
+                    <option value="full">📺 Full-Length Video (16:9) - YouTube</option>
+                </select>
+            </div>
+
+            <button type="submit" id="submit-btn">Generate Video</button>
+        </form>
+
+        <div id="progress-section">
+            <label>Progress: <span id="percent-text">0%</span></label>
+            <progress id="progress-bar" value="0" max="100"></progress>
+            <div id="status-log"></div>
+            <div id="final-result"></div>
         </div>
-
-        <div id="pdf_upload_div" style="display:none;">
-            <label for="pdf_file">PDF File:</label>
-            <input type="file" name="pdf_file" id="pdf_file">
-        </div>
-
-        <div id="url_input_div" style="display:none;">
-            <label for="url_input">URL:</label>
-            <input type="text" name="url_input" id="url_input" size="50">
-        </div>
-        <br><br>
-
-        <label for="video_type">Video Type:</label>
-        <select name="video_type" id="video_type">
-            <option value="short">Short Video (9:16)</option>
-            <option value="full">Full-Length Video (16:9)</option>
-        </select>
-        <br><br>
-
-        <input type="submit" value="Generate Video">
-    </form>
-
-    <div id="loading" style="display:none; margin-top: 20px;">
-        <div
-            style="border: 4px solid #f3f3f3; border-top: 4px solid #3498db; border-radius: 50%; width: 30px; height: 30px; animation: spin 2s linear infinite; display: inline-block; vertical-align: middle;">
-        </div>
-        <span style="margin-left: 10px; font-size: 18px;">Generating Video... This may take a few minutes.</span>
     </div>
-
-    <style>
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-    </style>
 
     <script>
         function toggleInputs() {
@@ -69,10 +219,88 @@
             document.getElementById('url_input_div').style.display = inputType === 'url' ? 'block' : 'none';
         }
 
-        function showLoading() {
-            document.getElementById('loading').style.display = 'block';
-        }
+        document.getElementById('generate-form').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const btn = document.getElementById('submit-btn');
+            const progressSection = document.getElementById('progress-section');
+            const progressBar = document.getElementById('progress-bar');
+            const percentText = document.getElementById('percent-text');
+            const statusLog = document.getElementById('status-log');
+            const finalResult = document.getElementById('final-result');
+
+            // Reset UI
+            btn.disabled = true;
+            btn.innerText = "Generating...";
+            progressSection.style.display = 'block';
+            progressBar.value = 0;
+            percentText.innerText = "0%";
+            statusLog.innerHTML = '';
+            finalResult.innerHTML = '';
+
+            const formData = new FormData(this);
+
+            try {
+                const response = await fetch('/generate', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+
+                    const chunk = decoder.decode(value, { stream: true });
+                    const lines = chunk.split('\n\n');
+
+                    for (const line of lines) {
+                        if (line.startsWith('data: ')) {
+                            const jsonStr = line.replace('data: ', '');
+                            try {
+                                const data = JSON.parse(jsonStr);
+
+                                if (data.percent) {
+                                    progressBar.value = data.percent;
+                                    percentText.innerText = data.percent + "%";
+                                }
+
+                                if (data.message) {
+                                    const entry = document.createElement('div');
+                                    entry.className = 'log-entry';
+                                    entry.innerText = `> ${data.message}`;
+                                    statusLog.appendChild(entry);
+                                    statusLog.scrollTop = statusLog.scrollHeight;
+
+                                    if (data.done && !data.error) {
+                                        finalResult.innerHTML = `<div class="success-msg">${data.message}</div>`;
+                                    }
+                                }
+
+                                if (data.error) {
+                                    const entry = document.createElement('div');
+                                    entry.className = 'log-entry error-msg';
+                                    entry.innerText = `ERROR: ${data.error}`;
+                                    statusLog.appendChild(entry);
+                                }
+                            } catch (e) {
+                                console.error("Error parsing JSON:", e);
+                            }
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error("Fetch error:", error);
+                statusLog.innerHTML += `<div class="log-entry error-msg">Network Error: ${error.message}</div>`;
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "Generate Video";
+            }
+        });
     </script>
+
 </body>
 
 </html>

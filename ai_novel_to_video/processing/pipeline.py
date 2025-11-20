@@ -28,14 +28,23 @@ class VideoGenerationPipeline:
             logger.warning(f"ScreenplayGenerator initialization warning: {e}")
             self.screenplay_generator = None
 
-    def process_request(self, input_type, input_data, video_type):
+    def process_request(self, input_type, input_data, video_type, progress_callback=None):
         """
         Orchestrates the entire video generation process.
         """
         logger.info(f"Starting process_request. Input Type: {input_type}, Video Type: {video_type}")
         
+        def report_progress(message, step, total_steps):
+            if progress_callback:
+                percent = int((step / total_steps) * 100)
+                progress_callback(message, percent)
+        
         try:
+            total_steps = 100 # Abstract total steps
+            current_step = 0
+            
             # 1. Input Processing
+            report_progress("Processing input...", 5, total_steps)
             text_content = self._handle_input(input_type, input_data)
             if not text_content:
                 return "Error: No text content extracted."
@@ -52,7 +61,15 @@ class VideoGenerationPipeline:
             output_dir = 'ai_novel_to_video/output'
             os.makedirs(output_dir, exist_ok=True)
 
+            # Calculate steps for loop (allocating 60% of progress to this loop)
+            loop_progress_start = 10
+            loop_progress_end = 70
+            progress_per_segment = (loop_progress_end - loop_progress_start) / len(segments)
+
             for i, segment in enumerate(segments):
+                current_loop_progress = loop_progress_start + (i * progress_per_segment)
+                report_progress(f"Processing segment {i+1}/{len(segments)}: Generating Screenplay...", current_loop_progress, total_steps)
+                
                 logger.info(f"Processing segment {i+1}/{len(segments)}")
                 
                 # Generate Screenplay
@@ -64,6 +81,7 @@ class VideoGenerationPipeline:
                     logger.warning(f"Screenplay parsing fallback used for segment {i+1}: {screenplay.get('_error', 'Unknown error')}")
                 
                 # Image Generation - use parsed scene_description
+                report_progress(f"Processing segment {i+1}/{len(segments)}: Generating Image...", current_loop_progress + (progress_per_segment * 0.3), total_steps)
                 scene_desc = screenplay.get('scene_description', '')
                 if scene_desc:
                     image_prompt = f"Cinematic shot: {scene_desc}"
@@ -76,6 +94,7 @@ class VideoGenerationPipeline:
                 logger.info(f"Generated image for segment {i+1}")
                 
                 # Voice Generation - use parsed voiceover_text
+                report_progress(f"Processing segment {i+1}/{len(segments)}: Generating Voice...", current_loop_progress + (progress_per_segment * 0.6), total_steps)
                 voiceover_text = screenplay.get('voiceover_text', '')
                 if voiceover_text:
                     voice_text = voiceover_text
@@ -97,11 +116,13 @@ class VideoGenerationPipeline:
                 })
 
             # 3. Subtitle Generation
+            report_progress("Generating subtitles...", 75, total_steps)
             logger.info("Generating subtitles...")
             srt_path = os.path.join(output_dir, 'subtitles.srt')
             self.subtitle_generator.generate_srt(scenes, srt_path)
 
             # 4. Video Assembly
+            report_progress("Assembling video (this may take a while)...", 80, total_steps)
             logger.info("Assembling video...")
             video_path = os.path.join(output_dir, 'final_video.mp4')
             final_video = self.video_assembler.assemble_video(scenes, video_path)
@@ -111,12 +132,14 @@ class VideoGenerationPipeline:
                 return "Error: Video assembly failed."
 
             # 5. Thumbnail Generation
+            report_progress("Generating thumbnail...", 90, total_steps)
             logger.info("Generating thumbnail...")
             thumb_prompt = f"Cinematic cover art for: {segments[0][:100]}"
             thumb_path = os.path.join(output_dir, 'thumbnail.png')
             self.thumbnail_generator.generate_thumbnail("My AI Story", thumb_prompt, thumb_path)
 
             # 6. YouTube Upload
+            report_progress("Uploading to YouTube...", 95, total_steps)
             logger.info("Uploading to YouTube...")
             video_title = f"AI Story: {segments[0][:30]}..."
             video_desc = f"Generated from text:\n\n{segments[0][:200]}...\n\n#AI #Storytelling"
@@ -126,6 +149,7 @@ class VideoGenerationPipeline:
                 final_video, video_title, video_desc, video_tags, thumb_path
             )
 
+            report_progress("Done!", 100, total_steps)
             logger.info("Pipeline completed successfully.")
             return f"Success! Video generated at {final_video}"
 
@@ -137,6 +161,9 @@ class VideoGenerationPipeline:
         if input_type == 'text':
             return input_data.get('text_input')
         elif input_type == 'pdf':
+            if 'pdf_path' in input_data:
+                return self.input_processor.extract_text_from_pdf(input_data['pdf_path'])
+            
             pdf_file = input_data.get('pdf_file')
             if pdf_file:
                 filepath = os.path.join('ai_novel_to_video/input', pdf_file.filename)
