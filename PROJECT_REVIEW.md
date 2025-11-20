@@ -17,15 +17,36 @@
 
 ## Gap Analysis: What's Missing from Original Requirements
 
-### 1. **Screenplay JSON Parsing** ⚠️
-**Current State**: The screenplay generator returns JSON but it's not being parsed.
-**Impact**: We're using raw text segments instead of structured scene descriptions.
-**Recommendation**: Parse the JSON output from Gemini to extract:
-- `scene_description` → Use for image prompts
-- `voiceover_text` → Use for TTS
-- `dialogues` → Use for character-specific voices
+### 1. **Screenplay JSON Parsing** ✅
+**Current State**: Implemented with fallback and validation.
+**Impact**: Scene descriptions and voiceover text are now correctly extracted.
 
-### 2. **Character Consistency** ❌
+### 2. **Retry Logic** ✅
+**Current State**: Implemented with exponential backoff and quota detection.
+**Impact**: System is resilient to transient API failures.
+
+### 3. **Smart Text Segmentation** ❌
+**Current State**: Basic word-count splitting.
+**Impact**: Scenes may be cut in the middle of dialogue or action.
+**Recommendation**: 
+- Use LLM to segment text by scenes
+- Respect dialogue blocks
+
+### 4. **Background Music** ❌
+**Current State**: No background music.
+**Impact**: Videos feel empty/less cinematic.
+**Recommendation**: 
+- Add library of royalty-free tracks
+- Select track based on scene mood (analyzed by LLM)
+
+### 5. **Advanced Web Scraping** ⚠️
+**Current State**: Basic `requests` + `BeautifulSoup`.
+**Impact**: May capture navbars/footers; fails on JS-heavy sites.
+**Recommendation**: 
+- Use `trafilatura` for cleaner extraction
+- Use `playwright` for dynamic sites (optional)
+
+### 6. **Character Consistency** ❌
 **Current State**: Each image is generated independently.
 **Impact**: Characters may look different across scenes.
 **Recommendation**: 
@@ -33,7 +54,7 @@
 - Use consistent character descriptions in prompts
 - Consider using Vertex AI's image guidance features
 
-### 3. **Animation** ❌
+### 7. **Animation** ❌
 **Current State**: Static images only.
 **Impact**: Less engaging than animated scenes.
 **Recommendation**: 
@@ -41,7 +62,7 @@
 - Or use MediaPipe for simple animations
 - Or use AnimateDiff for AI-powered animation
 
-### 4. **Multi-Voice Support** ❌
+### 8. **Multi-Voice Support** ❌
 **Current State**: Single narrator voice.
 **Impact**: Dialogues lack character distinction.
 **Recommendation**: 
@@ -49,7 +70,7 @@
 - Assign different WaveNet voices to different characters
 - Implement voice profile mapping
 
-### 5. **Progress Updates** ❌
+### 9. **Progress Updates** ❌
 **Current State**: User sees loading spinner but no detailed progress.
 **Impact**: Long waits with no feedback frustrate users.
 **Recommendation**: 
@@ -57,7 +78,7 @@
 - Stream progress updates to the UI
 - Show: "Processing segment 2/10...", "Generating voice...", etc.
 
-### 6. **Intro/Outro** ❌
+### 10. **Intro/Outro** ❌
 **Current State**: No intro/outro overlays.
 **Impact**: Missing polished opening/closing.
 **Recommendation**: 
@@ -65,28 +86,21 @@
 - For shorts: "Part X - To Be Continued..."
 - For full videos: "The End"
 
-### 7. **Separate Output Folders** ⚠️
+### 11. **Separate Output Folders** ⚠️
 **Current State**: All outputs go to `ai_novel_to_video/output/`
 **Impact**: Shorts and full videos mixed together.
 **Recommendation**: 
 - Create `output/shorts/` and `output/full_videos/`
 - Organize by video type
 
-### 8. **Auto-Cleanup** ❌
+### 12. **Auto-Cleanup** ❌
 **Current State**: Temporary files accumulate.
 **Impact**: Disk space issues over time.
 **Recommendation**: 
 - Implement cleanup after successful upload
 - Keep only final videos and thumbnails
 
-### 9. **Retry Logic** ⚠️
-**Current State**: Basic try-except, no retries.
-**Impact**: Transient API failures cause complete failures.
-**Recommendation**: 
-- Implement exponential backoff for API calls
-- Use libraries like `tenacity` for retry logic
-
-### 10. **Configurable Styles** ❌
+### 13. **Configurable Styles** ❌
 **Current State**: Hardcoded subtitle/video styles.
 **Impact**: Limited customization.
 **Recommendation**: 
@@ -99,21 +113,23 @@
 ## Enhancement Priorities
 
 ### 🔴 High Priority (Critical for Quality)
-1. **Parse Screenplay JSON** - Essential for proper scene generation
-2. **Progress Updates (SSE/WebSocket)** - Critical for UX
-3. **Multi-Voice Support** - Dramatically improves story quality
-4. **Retry Logic** - Essential for reliability
+1. **Progress Updates (SSE/WebSocket)** - Critical for UX
+2. **Multi-Voice Support** - Dramatically improves story quality
+3. **Smart Text Segmentation** - Essential for coherent storytelling
 
 ### 🟡 Medium Priority (Nice to Have)
+4. **Background Music** - Adds emotional depth
 5. **Character Consistency** - Improves visual quality
 6. **Animation (Ken Burns)** - Easy enhancement via MoviePy
 7. **Intro/Outro** - Polishes final output
 8. **Auto-Cleanup** - Prevents disk bloat
+9. **Separate Output Folders** - Better organization
 
 ### 🟢 Low Priority (Future Enhancements)
-9. **Advanced Animation (MediaPipe/AnimateDiff)** - Complex, high effort
-10. **Instagram/TikTok Upload** - Platform expansion
-11. **Configurable Templates** - Power user feature
+10. **Advanced Web Scraping** - Better input handling
+11. **Advanced Animation (MediaPipe/AnimateDiff)** - Complex, high effort
+12. **Instagram/TikTok Upload** - Platform expansion
+13. **Configurable Templates** - Power user feature
 
 ---
 

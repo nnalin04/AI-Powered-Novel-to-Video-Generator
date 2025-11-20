@@ -186,84 +186,128 @@
   - Test with different video types
 
 ---
-
-### Phase 3: Organization & Cleanup (🟡 Medium Priority)
-
-#### Task 3.1: Separate Output Folders
-**Goal**: Organize outputs by video type
-
-- [ ] **Subtask 3.1.1**: Update directory structure
-  - Create `output/shorts/` and `output/full_videos/`
-  - Update `VideoGenerationPipeline` to use correct folder
-  
-- [ ] **Subtask 3.1.2**: Add timestamp to output filenames
-  - Prevent overwriting previous videos
-  - Format: `{video_type}_{timestamp}.mp4`
-  
-- [ ] **Subtask 3.1.3**: Update tests for new structure
-
----
-
-#### Task 3.2: Auto-Cleanup
-**Goal**: Prevent disk bloat from temporary files
-
-- [ ] **Subtask 3.2.1**: Identify cleanup candidates
-  - Intermediate images (scene_*.png)
-  - Audio files (voice_*.mp3)
-  - Keep: final video, thumbnail, subtitles
-  
-- [ ] **Subtask 3.2.2**: Add cleanup logic to pipeline
-  - Cleanup after successful upload
-  - Make configurable via `.env`
-  
-- [ ] **Subtask 3.2.3**: Add cleanup error handling
-  - Don't fail pipeline if cleanup fails
-  - Log cleanup operations
-
----
-
-### Phase 4: Configuration & Polish (🟡 Medium Priority)
-
-#### Task 4.1: Configuration File System
-**Goal**: Make settings easily customizable
-
-- [ ] **Subtask 4.1.1**: Add PyYAML to requirements
-  
-- [ ] **Subtask 4.1.2**: Create `config.yaml` template
-  - Video settings (resolution, bitrate)
-  - Voice settings (profiles, speed)
-  - Processing settings (max segments, cleanup)
-  
-- [ ] **Subtask 4.1.3**: Create `ConfigLoader` utility
-  - Load and validate config
-  - Merge with `.env` values
-  - Provide defaults
-  
-- [ ] **Subtask 4.1.4**: Update services to use config
-  - Replace hardcoded values
-  - Document all config options
-
----
-
-#### Task 4.2: Better Error Messages
-**Goal**: Provide actionable error guidance
-
-- [ ] **Subtask 4.2.1**: Define error message templates
-  - Quota exceeded → suggest wait time or mock mode
-  - Invalid credentials → link to setup guide
-  - Network errors → suggest retry
-  
-- [ ] **Subtask 4.2.2**: Update exception handling
-  - Catch specific exceptions
-  - Return user-friendly messages
-  
-- [ ] **Subtask 4.2.3**: Add error messages to UI
-  - Display in web interface
-  - Include troubleshooting links
-
----
-
-### Phase 5: Advanced Features (🟢 Low Priority - Future)
+ 
+ #### Task 2.4: Smart Text Segmentation
+ **Goal**: Use LLM to split text into logical scenes instead of word counts
+ 
+ - [ ] **Subtask 2.4.1**: Update `InputProcessor` to use Gemini
+   - Create prompt for scene segmentation
+   - Handle long texts (chunking before LLM)
+   
+ - [ ] **Subtask 2.4.2**: Integrate into pipeline
+   - Replace regex splitting with LLM splitting
+   - Add fallback for API failures
+ 
+ ---
+ 
+ #### Task 2.5: Background Music
+ **Goal**: Add emotional depth with background tracks
+ 
+ - [ ] **Subtask 2.5.1**: Create music library
+   - Add royalty-free MP3s to `assets/music/`
+   - Categorize by mood (Sad, Happy, Action, Suspense)
+   
+ - [ ] **Subtask 2.5.2**: Implement music selection
+   - Analyze scene mood using Gemini
+   - Select matching track
+   
+ - [ ] **Subtask 2.5.3**: Integrate into `VideoAssembler`
+   - Mix background music with voiceover
+   - Implement audio ducking (lower music volume during speech)
+ 
+ ---
+ 
+ ### Phase 3: Organization & Cleanup (🟡 Medium Priority)
+ 
+ #### Task 3.1: Separate Output Folders
+ **Goal**: Organize outputs by video type
+ 
+ - [ ] **Subtask 3.1.1**: Update directory structure
+   - Create `output/shorts/` and `output/full_videos/`
+   - Update `VideoGenerationPipeline` to use correct folder
+   
+ - [ ] **Subtask 3.1.2**: Add timestamp to output filenames
+   - Prevent overwriting previous videos
+   - Format: `{video_type}_{timestamp}.mp4`
+   
+ - [ ] **Subtask 3.1.3**: Update tests for new structure
+ 
+ ---
+ 
+ #### Task 3.2: Auto-Cleanup
+ **Goal**: Prevent disk bloat from temporary files
+ 
+ - [ ] **Subtask 3.2.1**: Identify cleanup candidates
+   - Intermediate images (scene_*.png)
+   - Audio files (voice_*.mp3)
+   - Keep: final video, thumbnail, subtitles
+   
+ - [ ] **Subtask 3.2.2**: Add cleanup logic to pipeline
+   - Cleanup after successful upload
+   - Make configurable via `.env`
+   
+ - [ ] **Subtask 3.2.3**: Add cleanup error handling
+   - Don't fail pipeline if cleanup fails
+   - Log cleanup operations
+ 
+ ---
+ 
+ ### Phase 4: Configuration & Polish (🟡 Medium Priority)
+ 
+ #### Task 4.1: Configuration File System
+ **Goal**: Make settings easily customizable
+ 
+ - [ ] **Subtask 4.1.1**: Add PyYAML to requirements
+   
+ - [ ] **Subtask 4.1.2**: Create `config.yaml` template
+   - Video settings (resolution, bitrate)
+   - Voice settings (profiles, speed)
+   - Processing settings (max segments, cleanup)
+   
+ - [ ] **Subtask 4.1.3**: Create `ConfigLoader` utility
+   - Load and validate config
+   - Merge with `.env` values
+   - Provide defaults
+   
+ - [ ] **Subtask 4.1.4**: Update services to use config
+   - Replace hardcoded values
+   - Document all config options
+ 
+ ---
+ 
+ #### Task 4.2: Better Error Messages
+ **Goal**: Provide actionable error guidance
+ 
+ - [ ] **Subtask 4.2.1**: Define error message templates
+   - Quota exceeded → suggest wait time or mock mode
+   - Invalid credentials → link to setup guide
+   - Network errors → suggest retry
+   
+ - [ ] **Subtask 4.2.2**: Update exception handling
+   - Catch specific exceptions
+   - Return user-friendly messages
+   
+ - [ ] **Subtask 4.2.3**: Add error messages to UI
+   - Display in web interface
+   - Include troubleshooting links
+ 
+ ---
+ 
+ #### Task 4.3: Advanced Web Scraping
+ **Goal**: Better text extraction from URLs
+ 
+ - [ ] **Subtask 4.3.1**: Add `trafilatura` to requirements
+   - Replace `requests` + `BeautifulSoup`
+   
+ - [ ] **Subtask 4.3.2**: Implement fallback scraping
+   - Try `trafilatura` first
+   - Fallback to `BeautifulSoup`
+   
+ - [ ] **Subtask 4.3.3**: Test with various novel sites
+ 
+ ---
+ 
+ ### Phase 5: Advanced Features (🟢 Low Priority - Future)
 
 #### Task 5.1: Character Consistency
 - [ ] Research Vertex AI image guidance
@@ -290,25 +334,25 @@
 - **Status**: ✅ All core features implemented
 
 ### Iteration 2 (IN PROGRESS)
-- **Total Tasks**: 35 subtasks across 12 major tasks
-- **Completed**: 0
-- **In Progress**: Ready to start Phase 1
-- **Status**: 🚀 Planning complete
+- **Total Tasks**: 45 subtasks across 15 major tasks
+- **Completed**: 9 subtasks (Tasks 1.1 & 1.2 complete)
+- **In Progress**: Ready for Task 1.3
+- **Status**: 🚀 Phase 1 well underway
 
 ---
 
 ## 🎯 Next Actions
 
 **Immediate Next Steps** (Phase 1):
-1. Start with **Task 1.1** (Screenplay JSON Parsing) - Highest ROI
-2. Then **Task 1.2** (Retry Logic) - Critical for reliability
-3. Then **Task 1.3** (Progress Updates) - Best UX improvement
+1. **Task 1.3** (Progress Updates) - Best UX improvement
+2. **Task 2.1** (Multi-Voice Support) - Dramatic quality boost
+3. **Task 2.4** (Smart Text Segmentation) - Better storytelling
 
 **Timeline Estimate**:
-- Phase 1 (Critical): 2-3 days
-- Phase 2 (Medium): 2-3 days  
+- Phase 1 (Critical): 1-2 days
+- Phase 2 (Quality): 3-4 days  
 - Phase 3 (Cleanup): 1 day
-- Phase 4 (Polish): 1-2 days
+- Phase 4 (Polish): 2 days
 
 ---
 

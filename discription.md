@@ -13,13 +13,15 @@ The program will include a local web interface where the user can upload a file 
 
 | Feature | Description |
 |---|---|
-| LLM Integration | Powered by Google Gemini 1.5 Pro via API key |
-| AI Image & Animation Generation | Uses Google Vertex AI Imagen or MediaPipe for visuals |
-| Voice Generation | Uses Google Cloud Text-to-Speech (WaveNet voices) |
+| LLM Integration | Powered by Google Gemini 1.5 Pro API |
+| Smart Text Segmentation | LLM-based scene detection for coherent storytelling |
+| AI Image & Animation | Vertex AI Imagen + Ken Burns effect for motion |
+| Multi-Voice Generation | Character-specific voices using Google Cloud TTS |
+| Background Music | Mood-based music selection and mixing |
 | Subtitles | Generated via Gemini 1.5 API based on voiceover text |
-| Video Assembly | Uses `ffmpeg` for merging video, audio, and subtitles |
+| Video Assembly | Uses `ffmpeg` for merging video, audio, music, and subtitles |
 | Upload Automation | Uses YouTube Data API v3 for video upload |
-| Local UI | Simple web UI using Flask + HTML/JS for input and mode selection |
+| Local UI | Flask + HTML/JS with real-time progress updates (SSE) |
 
 ---
 
@@ -42,13 +44,13 @@ A simple Flask-based web page that allows:
   - 📺 *Full-Length Video (16:9 horizontal)*
 - Submit Button: Starts the AI generation pipeline.
 
-UI should show progress (text logs) and final download/upload links.
+UI shows **real-time progress** (Server-Sent Events) with detailed status logs.
 
 ---
 
 ### 2. Input Handling
 Supports:
-- Story/Web Novel URL scraping
+- Story/Web Novel URL scraping (using `trafilatura` for clean extraction)
 - Plain Text input (via web form)
 - PDF Upload (manual upload or from watched folder)
 
@@ -58,7 +60,7 @@ Automatically detects and processes the input type.
 
 ### 3. Text Processing
 - Extract clean story text.
-- Segment text intelligently into paragraphs or scenes (configurable by word count).
+- **Smart Segmentation**: Use Gemini to split text into logical scenes/dialogue blocks.
 - Maintain logical story continuity for cinematic flow.
 
 ---
@@ -72,125 +74,93 @@ Automatically detects and processes the input type.
     "dialogues": [{"character": "A", "line": "..."}, {"character": "B", "line": "..."}],
     "voiceover_text": "Narration text for TTS"
   }
+  ```
 - Output stored as JSON per paragraph
 
 ### 5. Image & Animation Generation (Google Vertex AI Imagen / MediaPipe)
 
 - Use Vertex AI Imagen to generate scene visuals in:
-
-- 9:16 format for Shorts
-
-- 16:9 format for full-length videos
-
+  - 9:16 format for Shorts
+  - 16:9 format for full-length videos
+- **Animation**: Apply Ken Burns effect (pan/zoom) to static images for dynamism.
 - Maintain character consistency across frames using embeddings or reference cache.
-
-- Optional: Use MediaPipe or AnimateDiff local model for lightweight animation.
 
 ### 6. Voiceover Generation (Google Cloud TTS)
 
 - Generate natural narration using Google WaveNet voices.
-
-Detect characters and assign voice profiles automatically.
-
-Save each segment as .mp3 or .wav.
+- **Multi-Voice**: Detect characters and assign distinct voice profiles automatically.
+- Save each segment as .mp3 or .wav.
 
 ### 7. Subtitle Generation
 
 - Use Gemini API to generate time-aligned subtitles (SRT/VTT) based on narration text and duration.
-
-Include configurable style templates (font, size, color).
+- Include configurable style templates (font, size, color).
 
 ### 8. Video Assembly (Local Processing)
 
 - Use ffmpeg or moviepy to merge:
-
-Background animation
-
-Voiceover audio
-
-Captions
-
+  - Background animation (Ken Burns)
+  - Voiceover audio
+  - **Background Music**: Mood-matched royalty-free tracks with ducking.
+  - Captions
 - Add intro/outro overlays:
-
-For Shorts: “Part X – To Be Continued…”
-
-For Full Videos: “The End”
-
-Output:
-
-Shorts: 1080x1920 MP4
-
-Full-Length: 1920x1080 MP4
+  - For Shorts: “Part X – To Be Continued…”
+  - For Full Videos: “The End”
+- Output:
+  - Shorts: 1080x1920 MP4
+  - Full-Length: 1920x1080 MP4
 
 ### 9. Thumbnail Generation
 
 - Generate consistent thumbnails using Vertex AI Imagen or Canva API.
-
-Add dynamic text overlays (“Part X”, title highlights).
+- Add dynamic text overlays (“Part X”, title highlights).
 
 ### 10. Upload Automation
 
 - Upload directly to YouTube Shorts or standard YouTube videos using the YouTube Data API v3.
-
-Add titles, descriptions, and tags automatically.
-
-Optionally allow Instagram/TikTok upload extension later.
+- Add titles, descriptions, and tags automatically.
+- Optionally allow Instagram/TikTok upload extension later.
 
 ### 11. File & Workflow Management
 
 - Organized local directory structure:
-
   ```
-
-/ai_novel_to_video/
-  ├── input/
-  ├── processing/
-  ├── output/
-  │    ├── shorts/
-  │    └── full_videos/
-  ├── logs/
-
-
-Auto-cleanup of temporary files after successful runs.
+  /ai_novel_to_video/
+    ├── input/
+    ├── processing/
+    ├── output/
+    │    ├── shorts/
+    │    └── full_videos/
+    ├── logs/
+  ```
+- Auto-cleanup of temporary files after successful runs.
 
 ### 12. Error Handling & Logging
 
 - Comprehensive error handling for all Google API calls.
-
-Retry failed requests with exponential backoff.
-
-Maintain rotating logs (loguru or logging module).
-
-Display errors on the web dashboard in real-time.
+- Retry failed requests with exponential backoff.
+- Maintain rotating logs (loguru or logging module).
+- Display errors on the web dashboard in real-time.
 
 ### 13. Configuration & Security
 
 - Load all credentials from .env file (no hardcoded keys).
-
 - Example:
-
-GOOGLE_API_KEY="your_gemini_api_key"
-YOUTUBE_CLIENT_SECRET="your_youtube_secret.json"
-
-
+  ```
+  GOOGLE_API_KEY="your_gemini_api_key"
+  YOUTUBE_CLIENT_SECRET="your_youtube_secret.json"
+  ```
 - Configurable environment variables for:
-
-Model type (Gemini, Imagen)
-
-Output resolution
-
-Voice preferences
+  - Model type (Gemini, Imagen)
+  - Output resolution
+  - Voice preferences
 
 ## Non-Functional Requirements
 
 Python 3.10+
-
 Local runtime (no cloud hosting required)
-
 Compatible with macOS, Linux, and Windows
-
 Uses Flask for web UI and REST endpoints
-
 Modular and extensible architecture
 
 ## Technology Stack (2025 Edition)
@@ -199,7 +169,7 @@ Modular and extensible architecture
 | LLM | Google Gemini 1.5 Pro API |
 | Image Generation | Google Vertex AI Imagen |
 | Voiceover | Google Cloud TTS (WaveNet) |
-| Animation | MediaPipe / AnimateDiff (local) |
+| Animation | MoviePy (Ken Burns) / MediaPipe |
 | Subtitles | Gemini 1.5 API |
 | Video Assembly | ffmpeg / moviepy |
 | Upload | YouTube Data API v3 |
