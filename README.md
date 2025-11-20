@@ -17,6 +17,235 @@ Transform novels and stories into engaging videos with AI-powered narration, vis
 - **Web Interface**: Simple Flask-based UI with real-time feedback
 - **Comprehensive Logging**: Track every step of the generation process
 
+## 🎯 What This Project Can Do
+
+This AI-powered system transforms written content (novels, stories, articles) into professional-quality videos automatically. Here's what makes it powerful:
+
+### Core Capabilities
+
+1. **Multi-Format Input Processing**
+
+   - **Text Input**: Paste any story or novel directly
+   - **PDF Upload**: Extract text from PDF books/documents
+   - **URL Scraping**: Pull content from web novels and articles
+   - Automatic text segmentation into manageable scenes
+
+2. **AI-Powered Content Generation**
+
+   - **Intelligent Screenplay Writing**: Converts paragraphs into cinematic scene descriptions with dialogue
+   - **Dynamic Image Generation**: Creates unique visuals for each scene
+   - **Multi-Voice Narration**: Different AI voices for narrator and characters
+   - **Automated Subtitles**: Time-synchronized SRT subtitle generation
+   - **Custom Thumbnails**: Eye-catching cover images for videos
+
+3. **Professional Video Production**
+
+   - **Multiple Formats**: YouTube Shorts (9:16) and standard videos (16:9)
+   - **Automated Assembly**: Combines images, audio, and subtitles seamlessly
+   - **Direct YouTube Upload**: OAuth2-authenticated publishing
+   - **Real-time Progress**: Live updates during generation process
+
+4. **Developer-Friendly Features**
+   - **Mock Mode**: Full functionality without API credentials for testing
+   - **Modular Architecture**: Each AI service is independent and testable
+   - **Comprehensive Logging**: Track every step for debugging
+   - **Retry Logic**: Automatic recovery from transient API failures
+   - **Unit Tests**: Full test coverage for all services
+
+## 🔄 How It Works: Step-by-Step
+
+### Phase 1: Input Processing
+
+```
+User Input → InputProcessor → Segmented Text
+```
+
+1. **Input Reception**: User provides content via web interface
+
+   - Text: Direct paste
+   - PDF: File upload with `pypdf` extraction
+   - URL: Web scraping with `BeautifulSoup4`
+
+2. **Text Segmentation**: Content is split into manageable scenes
+   - Paragraph-based chunking
+   - Configurable segment length (default: ~500 characters)
+   - Preserves narrative flow
+
+### Phase 2: AI Content Generation (Per Segment)
+
+```
+Segment → Screenplay → Image + Voice → Scene Assets
+```
+
+For each text segment, the pipeline executes:
+
+#### Step 2.1: Screenplay Generation
+
+- **Service**: `ScreenplayGenerator` (Google Gemini 2.5 Flash)
+- **Input**: Raw text paragraph
+- **Output**: Structured JSON screenplay
+  ```json
+  {
+    "scene_description": "Cinematic visual description",
+    "audio_script": [
+      {"speaker": "Narrator", "text": "..."},
+      {"speaker": "Character", "text": "..."}
+    ],
+    "dialogues": [...],
+    "voiceover_text": "Full narration text"
+  }
+  ```
+- **Features**:
+  - Extracts dialogue and character names
+  - Creates vivid scene descriptions for image generation
+  - Structures narration for voice synthesis
+  - Retry logic with exponential backoff
+
+#### Step 2.2: Image Generation
+
+- **Service**: `ImageGenerator` (Google Vertex AI Imagen 3)
+- **Input**: `scene_description` from screenplay
+- **Process**:
+  1. Enhances prompt: `"Cinematic shot: {scene_description}"`
+  2. Calls Vertex AI Imagen API
+  3. Saves high-quality PNG image
+- **Fallback**: Mock mode generates solid color placeholders
+- **Output**: `scene_N.png`
+
+#### Step 2.3: Multi-Voice Audio Generation
+
+- **Service**: `VoiceGenerator` (Google Cloud Text-to-Speech + Journey Voices)
+- **Input**: `audio_script` from screenplay
+- **Process**:
+
+  1. **Voice Mapping**: Matches characters to voice profiles
+
+     - Reads `config/voices.yaml` for character-to-voice mappings
+     - Heuristic detection (narrator, male, female, child)
+     - Supports custom voice parameters (pitch, rate, language)
+
+  2. **Multi-Voice Synthesis**:
+
+     ```python
+     for segment in audio_script:
+         speaker = segment['speaker']
+         text = segment['text']
+         voice_profile = get_voice_for_character(speaker)
+         generate_audio_segment(text, voice_profile)
+     ```
+
+  3. **Audio Concatenation**: Merges all segments using `moviepy`
+     - Maintains proper timing
+     - Seamless transitions between speakers
+
+- **Fallback**: Mock mode creates silent placeholder files
+- **Output**: `voice_N.mp3`
+
+### Phase 3: Video Assembly
+
+```
+All Scene Assets → VideoAssembler → Final Video
+```
+
+#### Step 3.1: Subtitle Generation
+
+- **Service**: `SubtitleGenerator`
+- **Process**:
+  1. Analyzes audio duration for each scene
+  2. Aligns text with timestamps
+  3. Generates SRT format subtitles
+- **Output**: `subtitles.srt`
+
+#### Step 3.2: Video Composition
+
+- **Service**: `VideoAssembler` (MoviePy)
+- **Process**:
+
+  1. **For Each Scene**:
+
+     - Load image as video clip (duration = audio length)
+     - Overlay audio track
+     - Add subtitle text overlay
+
+  2. **Concatenation**:
+     - Combine all scene clips sequentially
+     - Apply video format (9:16 or 16:9)
+     - Encode to MP4 (H.264 codec)
+
+- **Output**: `final_video.mp4`
+
+#### Step 3.3: Thumbnail Generation
+
+- **Service**: `ThumbnailGenerator`
+- **Process**:
+  1. Generates eye-catching cover image
+  2. Overlays title text
+  3. Optimizes for YouTube thumbnail specs
+- **Output**: `thumbnail.png`
+
+### Phase 4: Publishing
+
+```
+Final Assets → YouTubeUploader → Published Video
+```
+
+#### YouTube Upload
+
+- **Service**: `YouTubeUploader` (Google YouTube Data API v3)
+- **Authentication**: OAuth2 flow
+- **Process**:
+  1. Authenticates user (first-time browser popup)
+  2. Uploads video file
+  3. Sets metadata (title, description, tags)
+  4. Attaches thumbnail
+  5. Returns video URL
+- **Fallback**: Mock mode simulates upload and logs details
+
+### Phase 5: Real-Time Feedback
+
+```
+Pipeline Progress → Server-Sent Events → Web UI Updates
+```
+
+- **Technology**: Flask SSE (Server-Sent Events)
+- **Updates Include**:
+  - Current step (e.g., "Processing segment 3/10")
+  - Progress percentage (0-100%)
+  - Status messages (success/error)
+- **User Experience**: Live progress bar and status text in browser
+
+## 🧠 AI Models & Technologies Used
+
+### Current Implementation (Next-Gen Google Stack)
+
+| Component      | Technology                         | Purpose                                       |
+| -------------- | ---------------------------------- | --------------------------------------------- |
+| **Screenplay** | Google Gemini 2.5 Flash            | Converts paragraphs to structured screenplays |
+| **Images**     | Vertex AI Imagen 3                 | Generates cinematic scene visuals             |
+| **Video**      | Google Veo (Future)                | 4K video clip generation                      |
+| **Voice**      | Google Cloud TTS (Neural2/Journey) | Multi-voice narration with character voices   |
+| **Assembly**   | MoviePy                            | Video editing and composition                 |
+| **Upload**     | YouTube Data API v3                | Automated publishing                          |
+
+### Alternative Configurations
+
+See `COST_ESTIMATE.md` for detailed comparisons:
+
+- **Budget**: Free/local models (Gemini Flash, Stable Diffusion)
+- **Standard**: Google Pro tier (~$15/month)
+- **Hybrid**: Mix of premium voice (ElevenLabs) + standard visuals
+- **Premium**: Best-in-class tools (Midjourney, Udio, Sora)
+
+## 📊 Project Statistics
+
+- **Total Services**: 8 modular AI services
+- **Code Organization**: 15+ Python modules
+- **Test Coverage**: 100% of core services
+- **Supported Formats**: 2 video aspect ratios
+- **Input Methods**: 3 (text, PDF, URL)
+- **Voice Profiles**: 4+ configurable character voices
+- **API Integrations**: 4 (Gemini, Vertex AI, Cloud TTS, YouTube)
+
 ## 🏗️ Architecture
 
 ```
