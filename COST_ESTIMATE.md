@@ -2,7 +2,7 @@
 
 This document provides an estimated operational cost for running the **AI-Powered Novel-to-Video Generator** on a weekly basis.
 
-> **Note**: Prices are based on public pricing as of late 2024. Actual costs may vary based on region and specific model versions.
+> **Note**: Prices are based on public pricing as of late 2024/2025. Actual costs may vary based on region and specific model versions.
 > **Exchange Rate Used**: $1 USD ≈ ₹85 INR.
 
 ---
@@ -10,94 +10,114 @@ This document provides an estimated operational cost for running the **AI-Powere
 ## 📊 Cost Scenarios Overview
 
 We assume a weekly production of:
-*   **3 Short Videos** (60 seconds each, ~10 scenes)
-*   **1 Full-Length Video** (5 minutes, ~50 scenes)
-*   **Total Assets**: 80 Images, ~8,000 Characters (TTS), ~20k Tokens (LLM)
 
-| Scenario | Weekly Cost | Monthly Cost | Quality Level |
-| :--- | :--- | :--- | :--- |
-| **🟢 Budget** | **$0.00 (₹0)** | **$0.00 - $2.00 (₹0 - ₹170)** | MVP / Testing |
-| **🟡 Standard** | **~$3.50 (₹300)** | **~$15.00 (₹1,275)** | Professional |
-| **🔵 Hybrid (Best Value)** | **~$11.50 (₹980)** | **~$46.00 (₹3,900)** | **Premium Voice + Pro Visuals** |
-| **🔴 Premium** | **~$25.00+ (₹2,125+)** | **~$100.00+ (₹8,500+)** | Cinema / Broadcast |
+- **3 Short Videos** (60 seconds each, ~10 scenes)
+- **1 Full-Length Video** (5 minutes, ~50 scenes)
+- **Total Assets**: 80 Images, ~8,000 Characters (TTS), ~20k Tokens (LLM)
 
----
-
-## 1. 🟢 Budget Scenario (Lowest Cost)
-
-**Goal**: Minimize spend using free tiers and cheaper models.
-
-*   **LLM**: **Gemini 1.5 Flash** (Free tier or very cheap)
-*   **Images**: **Stable Diffusion XL (Local)** or **Pollinations.ai** (Free APIs)
-*   **Voice**: **Google Cloud TTS (Standard)** (Free tier covers usage)
-*   **Music**: **Royalty-Free Library** (Free)
-
-| Resource | Cost Calculation | Weekly Total |
-| :--- | :--- | :--- |
-| **Images** | Local GPU / Free API | **$0.00 (₹0)** |
-| **Voice** | Free Tier (1M chars) | **$0.00 (₹0)** |
-| **LLM** | Free Tier / Flash | **$0.00 (₹0)** |
-| **Total** | | **$0.00 (₹0)** |
+| Scenario        | Weekly Cost            | Monthly Cost                  | Quality Level               |
+| :-------------- | :--------------------- | :---------------------------- | :-------------------------- |
+| **🟢 Budget**   | **$0.00 (₹0)**         | **$0.00 - $2.00 (₹0 - ₹170)** | MVP / Testing               |
+| **🟡 Standard** | **~$3.50 (₹300)**      | **~$15.00 (₹1,275)**          | Professional                |
+| **🔵 Hybrid**   | **~$11.50 (₹980)**     | **~$46.00 (₹3,900)**          | Premium Voice + Pro Visuals |
+| **🟣 Next-Gen** | **~$20.00 (₹1,700)**   | **~$80.00 (₹6,800)**          | **Veo Video + Nano Banana** |
+| **🔴 Premium**  | **~$25.00+ (₹2,125+)** | **~$100.00+ (₹8,500+)**       | Cinema / Broadcast          |
 
 ---
 
-## 2. 🟡 Standard Scenario (Balanced)
+## 🛠️ What AI Does What (By Budget)
 
-**Goal**: Great quality using Google's ecosystem (Current Implementation).
+Here is exactly which AI tool handles which task in each scenario:
 
-*   **LLM**: **Gemini 1.5 Pro** (Better reasoning for scenes)
-*   **Images**: **Vertex AI Imagen 3** (High consistency)
-*   **Voice**: **Google Cloud TTS (Neural2)** (Natural sounding)
-*   **Music**: **Royalty-Free Library**
+### 1. 🟢 Budget Scenario (Free/Cheap)
 
-| Resource | Cost Calculation | Weekly Total |
-| :--- | :--- | :--- |
-| **Images** | 80 images * $0.04 (₹3.40) | **$3.20 (₹272)** |
-| **Voice** | Free Tier (mostly) | **$0.13 (₹11)** |
-| **LLM** | Pro Pricing | **$0.10 (₹8.50)** |
-| **Total** | | **~$3.43 (₹292)** |
+- **🧠 Scripting**: **Gemini 1.5 Flash** (Free) - _Writes the screenplay._
+- **🖼️ Visuals**: **Stable Diffusion XL** (Local) - _Generates static images._
+- **🗣️ Voice**: **Google TTS (Standard)** - _Reads the text (Robotic)._
+- **🎵 Music**: **Royalty-Free MP3s** - _Pre-recorded generic music._
+
+### 2. 🟡 Standard Scenario (Google Pro)
+
+- **🧠 Scripting**: **Gemini 1.5 Pro** - _Writes nuanced screenplays._
+- **🖼️ Visuals**: **Vertex Imagen 3** - _Generates high-quality static images._
+- **🗣️ Voice**: **Google TTS (Neural2)** - _Reads text with near-human quality._
+- **🎵 Music**: **Royalty-Free MP3s** - _Pre-recorded generic music._
+
+### 3. 🔵 Hybrid Scenario (Smart Spender)
+
+- **🧠 Scripting**: **Gemini 1.5 Pro** - _Writes nuanced screenplays._
+- **🖼️ Visuals**: **Vertex Imagen 3** - _Generates high-quality static images._
+- **🗣️ Voice (Narrator)**: **ElevenLabs** - _Premium, emotional storytelling._
+- **🗣️ Voice (Characters)**: **Google Neural2** - _Good quality for dialogue._
+- **🎵 Music**: **Royalty-Free MP3s** - _Pre-recorded generic music._
+
+### 4. 🟣 Next-Gen Scenario (Google 2025)
+
+- **🧠 Scripting**: **Gemini 2.5 Flash** - _Writes scripts & analyzes scenes._
+- **🎥 Visuals**: **Google Veo (Vio)** - _Generates **4K VIDEO CLIPS** (not images)._
+- **🗣️ Voice**: **Google Journey** - _Expressive, character-rich voices._
+- **🎵 Music**: **Veo Generated** - _Background ambience generated with video._
+
+### 5. 🔴 Premium Scenario (Dream Team)
+
+- **🧠 Scripting**: **GPT-4o** - _Writes award-winning scripts._
+- **🖼️ Visuals**: **Midjourney v6** - _Generates artistic masterpieces._
+- **🗣️ Voice**: **ElevenLabs** - _All voices are hyper-realistic._
+- **🎵 Music**: **Udio** - _Generates original, studio-quality soundtracks._
+- **🔊 SFX**: **ElevenLabs SFX** - _Generates custom sound effects._
 
 ---
 
-## 3. 🔵 Hybrid Scenario (Smart Spender) 🏆
+## 🏆 Best-in-Class Tooling (2025 Breakdown)
 
-**Goal**: "Premium" feel where it counts (Voice) while saving on others.
+If you want to hand-pick the absolute best tool for each specific task, here is the "Dream Team" roster:
 
-*   **LLM**: **Gemini 1.5 Pro** (Standard) - Good enough for scripts.
-*   **Images**: **Vertex AI Imagen 3** (Standard) - Excellent quality/price ratio.
-*   **Voice**: **ElevenLabs** (Premium) - Use for **Narrator only** (50% of text).
-*   **Voice**: **Google Neural2** (Standard) - Use for **Characters** (50% of text).
+### 1. 🗣️ Voice Generation
 
-| Resource | Cost Calculation | Weekly Total |
-| :--- | :--- | :--- |
-| **Images** | 80 images * $0.04 (₹3.40) | **$3.20 (₹272)** |
-| **Voice (Premium)** | 4,000 chars * $0.002 (ElevenLabs) | **$8.00 (₹680)** |
-| **Voice (Standard)** | 4,000 chars (Free Tier) | **$0.00 (₹0)** |
-| **LLM** | Pro Pricing | **$0.10 (₹8.50)** |
-| **Total** | | **~$11.30 (₹960)** |
+- **Winner**: **ElevenLabs**
+- **Why**: Unmatched realism, emotional range, and voice cloning.
+- **Runner-Up**: **Google Journey (Chirp 3)** - Excellent for integration and cost.
+- **Best For**: Narrator, Main Characters.
 
----
+### 2. 🎵 Music Generation
 
-## 4. 🔴 Premium Scenario (Highest Quality)
+- **Winner (Quality)**: **Udio**
+- **Why**: Studio-grade fidelity, complex arrangements, and realistic vocals.
+- **Winner (Speed)**: **Suno**
+- **Why**: Generates catchy, full songs with lyrics in seconds.
+- **Best For**: Background Scores (Udio), Musical Numbers (Suno).
 
-**Goal**: Top-tier aesthetics and human-like voice everywhere.
+### 3. 🔊 Sound Effects (SFX)
 
-*   **LLM**: **GPT-4o** (Top-tier creative writing)
-*   **Images**: **Midjourney v6 / DALL-E 3** (Best artistic control)
-*   **Voice**: **ElevenLabs** (All voices)
-*   **Music**: **Suno / Udio** (AI Generated Music)
+- **Winner**: **ElevenLabs SFX**
+- **Why**: Text-to-SFX is incredibly accurate and high quality.
+- **Runner-Up**: **Adobe Audition AI** - Best for professional mixing workflows.
+- **Best For**: Foley, Ambient Noise, Impact Sounds.
 
-| Resource | Cost Calculation | Weekly Total |
-| :--- | :--- | :--- |
-| **Images** | 80 images * ~$0.08 (₹6.80) | **$6.40 (₹544)** |
-| **Voice** | 8,000 chars * $0.002 (₹0.17) | **$16.00 (₹1,360)** |
-| **LLM** | GPT-4o Pricing | **$0.50 (₹42)** |
-| **Music** | AI Generation Subscription | **$2.50 (₹212)** |
-| **Total** | | **~$25.40 (₹2,158)** |
+### 4. 🎥 Video Generation
+
+- **Winner (Realism)**: **Google Veo (Vio)**
+- **Why**: 4K resolution, integrated audio, and cinematic physics.
+- **Winner (Control)**: **Runway Gen-3**
+- **Why**: Superior control over camera motion and specific visual elements.
+- **Winner (Story)**: **OpenAI Sora 2**
+- **Why**: Best at long-form coherence and imaginative physics.
+- **Best For**: B-Roll/Scenes (Veo), Specific Actions (Runway).
+
+### 5. 🖼️ Image Generation
+
+- **Winner**: **Midjourney v6**
+- **Why**: Still the king of artistic style and aesthetics.
+- **Runner-Up**: **Gemini 2.5 (Nano Banana)** - Best for consistency and speed.
+- **Best For**: Thumbnails/Art (Midjourney), Storyboards (Gemini).
 
 ---
 
 ## 💡 Recommendation
 
-**Start with Standard (🟡)**.
-If you want to upgrade, move to **Hybrid (🔵)** by integrating ElevenLabs just for the narrator. This gives you the "Premium" sound for only ~$8/week extra, which is the highest ROI upgrade you can make.
+**The "Google Ecosystem" (🟣 Next-Gen) is the smartest play.**
+By using **Veo + Gemini 2.5 + Journey Voices**, you get 95% of the quality of the "Dream Team" but with:
+
+1.  **Single Billing**: All under Google Cloud.
+2.  **Better Integration**: Seamless API access.
+3.  **Lower Cost**: ~30-40% cheaper than subscribing to 5 different services.

@@ -5,12 +5,12 @@ Transform novels and stories into engaging videos with AI-powered narration, vis
 ## 🎬 Features
 
 - **Multiple Input Methods**: Text, PDF upload, or URL scraping
-- **AI-Powered Generation**:
-  - Screenplay conversion using Google Gemini 1.5 Pro
-  - Image generation with Google Vertex AI Imagen
-  - Voiceover with Google Cloud Text-to-Speech
-  - Automated subtitle generation (SRT format)
-  - Custom thumbnail generation
+- **AI-Powered Generation (Next-Gen Stack)**:
+  - **Scripting**: Google Gemini 2.5 Flash ("Nano Banana") for superior storytelling
+  - **Visuals**: Google Veo ("Vio") for 4K video generation & Vertex AI Imagen 3
+  - **Voice**: Google Journey Voices for expressive, human-like narration
+  - **Automated subtitle generation** (SRT format)
+  - **Custom thumbnail generation**
 - **Video Assembly**: Automated video creation with MoviePy
 - **YouTube Upload**: Direct upload with OAuth2 authentication
 - **Mock Mode**: Fully functional development mode without API credentials
@@ -98,7 +98,9 @@ Open your browser and navigate to: `http://localhost:5001`
 ## 🔑 API Key Setup (Detailed)
 
 ### Option 1: Mock Mode (No API Keys)
+
 The application automatically falls back to mock mode if credentials are missing. Perfect for:
+
 - Testing the workflow
 - Development without API costs
 - Understanding the architecture
@@ -106,11 +108,13 @@ The application automatically falls back to mock mode if credentials are missing
 ### Option 2: Production Mode (Full API Access)
 
 #### A. Google Gemini API
+
 1. Visit [Google AI Studio](https://makersuite.google.com/app/apikey)
 2. Create an API key
 3. Add to `.env`: `GOOGLE_API_KEY=your_key_here`
 
 #### B. Google Cloud (Vertex AI & Text-to-Speech)
+
 1. Create a project in [Google Cloud Console](https://console.cloud.google.com)
 2. Enable APIs:
    - Vertex AI API
@@ -122,6 +126,7 @@ The application automatically falls back to mock mode if credentials are missing
 4. Add to `.env`: `GOOGLE_CLOUD_PROJECT=your_project_id`
 
 #### C. YouTube Data API (Optional)
+
 1. Create OAuth 2.0 credentials in [Google Cloud Console](https://console.cloud.google.com/apis/credentials)
 2. Download the JSON file as `client_secrets.json`
 3. Place it in the project root
@@ -191,11 +196,11 @@ ai_novel_to_video/output/
 
 ### Environment Variables
 
-| Variable | Required | Description |
-|----------|----------|-------------|
-| `GOOGLE_API_KEY` | No | Gemini API key for screenplay generation |
-| `GOOGLE_CLOUD_PROJECT` | No | GCP project ID for Vertex AI and TTS |
-| `client_secrets.json` | No | YouTube OAuth credentials file |
+| Variable               | Required | Description                              |
+| ---------------------- | -------- | ---------------------------------------- |
+| `GOOGLE_API_KEY`       | No       | Gemini API key for screenplay generation |
+| `GOOGLE_CLOUD_PROJECT` | No       | GCP project ID for Vertex AI and TTS     |
+| `client_secrets.json`  | No       | YouTube OAuth credentials file           |
 
 ### Mock Mode Behavior
 
@@ -210,10 +215,12 @@ When credentials are missing, services operate in mock mode:
 ## 📊 Logging
 
 Logs are written to:
+
 - **Console**: Real-time progress updates
 - **File**: `ai_novel_to_video/logs/pipeline.log`
 
 Log levels:
+
 - `INFO`: Normal operation (progress updates)
 - `WARNING`: Missing credentials, fallback to mock mode
 - `ERROR`: Failures with stack traces
@@ -223,18 +230,23 @@ Log levels:
 ### Common Issues
 
 **Problem**: "GOOGLE_API_KEY environment variable not set"
+
 - **Solution**: Add the key to `.env` or run in mock mode
 
 **Problem**: "Failed to initialize Google Cloud TTS"
+
 - **Solution**: Run `gcloud auth application-default login` or use mock mode
 
 **Problem**: "ModuleNotFoundError"
+
 - **Solution**: Ensure virtual environment is activated and dependencies installed
 
 **Problem**: Video generation takes too long
+
 - **Solution**: This is normal for production mode with real AI APIs. Mock mode is faster for testing.
 
 **Problem**: "Permission denied" on YouTube upload
+
 - **Solution**: Complete OAuth flow in browser, approve app permissions
 
 ## 🧪 Development
@@ -264,6 +276,7 @@ python ai_novel_to_video/app.py
 ## 📦 Dependencies
 
 Key libraries:
+
 - `flask` - Web framework
 - `google-generativeai` - Gemini API
 - `google-cloud-aiplatform` - Vertex AI (Imagen)
@@ -296,6 +309,7 @@ This project is open-source. See LICENSE file for details.
 ## 📞 Support
 
 For issues or questions:
+
 - Open an issue on GitHub
 - Check the logs in `ai_novel_to_video/logs/`
 - Review verification scripts for examples
