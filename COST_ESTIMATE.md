@@ -3,6 +3,7 @@
 This document provides an estimated operational cost for running the **AI-Powered Novel-to-Video Generator** on a weekly basis.
 
 > **Note**: Prices are based on public pricing as of late 2024. Actual costs may vary based on region and specific model versions.
+> **Exchange Rate Used**: $1 USD ≈ ₹85 INR.
 
 ---
 
@@ -15,9 +16,10 @@ We assume a weekly production of:
 
 | Scenario | Weekly Cost | Monthly Cost | Quality Level |
 | :--- | :--- | :--- | :--- |
-| **🟢 Budget (Lowest Cost)** | **$0.00 - $0.50** | **$0.00 - $2.00** | Good for testing & MVP |
-| **🟡 Standard (Current)** | **~$3.50** | **~$15.00** | Professional Quality |
-| **🔴 Premium (Highest Cost)** | **~$25.00+** | **~$100.00+** | Cinema/Broadcast Quality |
+| **🟢 Budget** | **$0.00 (₹0)** | **$0.00 - $2.00 (₹0 - ₹170)** | MVP / Testing |
+| **🟡 Standard** | **~$3.50 (₹300)** | **~$15.00 (₹1,275)** | Professional |
+| **🔵 Hybrid (Best Value)** | **~$11.50 (₹980)** | **~$46.00 (₹3,900)** | **Premium Voice + Pro Visuals** |
+| **🔴 Premium** | **~$25.00+ (₹2,125+)** | **~$100.00+ (₹8,500+)** | Cinema / Broadcast |
 
 ---
 
@@ -32,10 +34,10 @@ We assume a weekly production of:
 
 | Resource | Cost Calculation | Weekly Total |
 | :--- | :--- | :--- |
-| **Images** | Local GPU / Free API | **$0.00** |
-| **Voice** | Free Tier (1M chars) | **$0.00** |
-| **LLM** | Free Tier / Flash | **$0.00** |
-| **Total** | | **$0.00** |
+| **Images** | Local GPU / Free API | **$0.00 (₹0)** |
+| **Voice** | Free Tier (1M chars) | **$0.00 (₹0)** |
+| **LLM** | Free Tier / Flash | **$0.00 (₹0)** |
+| **Total** | | **$0.00 (₹0)** |
 
 ---
 
@@ -50,54 +52,52 @@ We assume a weekly production of:
 
 | Resource | Cost Calculation | Weekly Total |
 | :--- | :--- | :--- |
-| **Images** | 80 images * $0.04 | **$3.20** |
-| **Voice** | Free Tier (mostly) | **$0.13** |
-| **LLM** | Pro Pricing | **$0.10** |
-| **Total** | | **~$3.43** |
+| **Images** | 80 images * $0.04 (₹3.40) | **$3.20 (₹272)** |
+| **Voice** | Free Tier (mostly) | **$0.13 (₹11)** |
+| **LLM** | Pro Pricing | **$0.10 (₹8.50)** |
+| **Total** | | **~$3.43 (₹292)** |
 
 ---
 
-## 3. 🔴 Premium Scenario (Highest Quality)
+## 3. 🔵 Hybrid Scenario (Smart Spender) 🏆
 
-**Goal**: Top-tier aesthetics and human-like voice.
+**Goal**: "Premium" feel where it counts (Voice) while saving on others.
 
-*   **LLM**: **GPT-4o** or **Claude 3.5 Sonnet** (Top-tier creative writing)
-*   **Images**: **Midjourney v6** (via API wrapper) or **DALL-E 3** (Best artistic control)
-*   **Voice**: **ElevenLabs** (Indistinguishable from human)
+*   **LLM**: **Gemini 1.5 Pro** (Standard) - Good enough for scripts.
+*   **Images**: **Vertex AI Imagen 3** (Standard) - Excellent quality/price ratio.
+*   **Voice**: **ElevenLabs** (Premium) - Use for **Narrator only** (50% of text).
+*   **Voice**: **Google Neural2** (Standard) - Use for **Characters** (50% of text).
+
+| Resource | Cost Calculation | Weekly Total |
+| :--- | :--- | :--- |
+| **Images** | 80 images * $0.04 (₹3.40) | **$3.20 (₹272)** |
+| **Voice (Premium)** | 4,000 chars * $0.002 (ElevenLabs) | **$8.00 (₹680)** |
+| **Voice (Standard)** | 4,000 chars (Free Tier) | **$0.00 (₹0)** |
+| **LLM** | Pro Pricing | **$0.10 (₹8.50)** |
+| **Total** | | **~$11.30 (₹960)** |
+
+---
+
+## 4. 🔴 Premium Scenario (Highest Quality)
+
+**Goal**: Top-tier aesthetics and human-like voice everywhere.
+
+*   **LLM**: **GPT-4o** (Top-tier creative writing)
+*   **Images**: **Midjourney v6 / DALL-E 3** (Best artistic control)
+*   **Voice**: **ElevenLabs** (All voices)
 *   **Music**: **Suno / Udio** (AI Generated Music)
 
 | Resource | Cost Calculation | Weekly Total |
 | :--- | :--- | :--- |
-| **Images** | 80 images * ~$0.08 (DALL-E 3 HD) | **$6.40** |
-| **Voice** | 8,000 chars * $0.002 (ElevenLabs) | **$16.00** |
-| **LLM** | GPT-4o Pricing | **$0.50** |
-| **Music** | AI Generation Subscription | **$2.50** (alloc.) |
-| **Total** | | **~$25.40** |
-
----
-
-## 4. Detailed Comparison
-
-### Image Generation 🖼️
-*   **Budget**: Free (Local SDXL) - *Requires good GPU, variable quality.*
-*   **Standard**: $0.04/img (Imagen) - *Fast, consistent, integrated.*
-*   **Premium**: $0.08-$0.10/img (Midjourney/DALL-E) - *Best artistic style, but slower/more expensive.*
-
-### Voice Generation 🗣️
-*   **Budget**: Free (Google Standard) - *Robotic but clear.*
-*   **Standard**: Free/Cheap (Google Neural2) - *Very good, near-human.*
-*   **Premium**: Expensive (ElevenLabs) - *Perfect emotion, cloning capability.*
-
-### LLM (Scripting) 🧠
-*   **Budget**: Free (Gemini Flash) - *Fast, good for simple summaries.*
-*   **Standard**: Cheap (Gemini Pro) - *Great nuance and direction.*
-*   **Premium**: Moderate (GPT-4o) - *Best at complex creative writing.*
+| **Images** | 80 images * ~$0.08 (₹6.80) | **$6.40 (₹544)** |
+| **Voice** | 8,000 chars * $0.002 (₹0.17) | **$16.00 (₹1,360)** |
+| **LLM** | GPT-4o Pricing | **$0.50 (₹42)** |
+| **Music** | AI Generation Subscription | **$2.50 (₹212)** |
+| **Total** | | **~$25.40 (₹2,158)** |
 
 ---
 
 ## 💡 Recommendation
 
-Stick with the **Standard Scenario (Google Ecosystem)** for now.
-*   It offers the best **Quality-to-Price ratio**.
-*   **$15/month** is very affordable for a channel producing 4 videos/week.
-*   Upgrade to **ElevenLabs (Premium Voice)** later if voice quality becomes the bottleneck (adds ~$60/month).
+**Start with Standard (🟡)**.
+If you want to upgrade, move to **Hybrid (🔵)** by integrating ElevenLabs just for the narrator. This gives you the "Premium" sound for only ~$8/week extra, which is the highest ROI upgrade you can make.
