@@ -168,3 +168,80 @@ class VoiceGenerator:
             f.write(f"Mock Audio Content for: {text}")
         
         return output_path
+
+    def generate_conversation(self, audio_script: list, output_path: str) -> Optional[str]:
+        """
+        Generates a conversation audio file from a script.
+        
+        Args:
+            audio_script: List of dicts with 'speaker' and 'text'.
+            output_path: Path to save the final MP3.
+        """
+        # Check if we are effectively in mock mode
+        if not self.client or self.rate_limit_exceeded:
+             print("Mock generating conversation...")
+             with open(output_path, 'w') as f:
+                 for segment in audio_script:
+                     speaker = segment.get('speaker', 'Unknown')
+                     text = segment.get('text', '')
+                     f.write(f"{speaker}: {text}\n")
+             return output_path
+
+        # Real generation
+        import tempfile
+        import shutil
+        from moviepy.editor import concatenate_audioclips, AudioFileClip
+
+        temp_files = []
+        clips = []
+        temp_dir = None
+        
+        try:
+            # Create a temp directory for segments
+            temp_dir = tempfile.mkdtemp()
+            
+            for i, segment in enumerate(audio_script):
+                speaker = segment.get('speaker', 'Narrator')
+                text = segment.get('text', '')
+                
+                if not text.strip():
+                    continue
+                    
+                # Get voice profile
+                voice_params = self.get_voice_for_character(speaker)
+                
+                # Generate segment audio
+                segment_path = os.path.join(temp_dir, f"seg_{i}.mp3")
+                result = self.generate_voice(text, segment_path, voice_params=voice_params)
+                
+                if result:
+                    temp_files.append(result)
+                    try:
+                        clip = AudioFileClip(result)
+                        clips.append(clip)
+                    except Exception as e:
+                        print(f"Error loading audio clip {result}: {e}")
+
+            if not clips:
+                print("No audio clips generated for conversation.")
+                return None
+
+            # Concatenate
+            final_clip = concatenate_audioclips(clips)
+            final_clip.write_audiofile(output_path, logger=None)
+            
+            # Close clips to release file handles
+            for clip in clips:
+                clip.close()
+            final_clip.close()
+            
+            return output_path
+
+        except Exception as e:
+            print(f"Error generating conversation: {e}")
+            # Fallback to mock on error
+            return self._generate_mock_voice("Conversation generation failed", output_path)
+        finally:
+            # Cleanup temp dir
+            if temp_dir and os.path.exists(temp_dir):
+                shutil.rmtree(temp_dir)
