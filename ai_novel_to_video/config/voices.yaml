@@ -1,0 +1,34 @@
+# Voice Profiles Configuration
+# Using Google Cloud TTS Neural2 and Studio voices for high quality
+
+narrator:
+  name: "en-US-Neural2-D" # Deep, authoritative male
+  language_code: "en-US"
+  gender: "MALE"
+  speaking_rate: 1.0
+  pitch: 0.0
+
+male_default:
+  name: "en-US-Neural2-I" # Standard male
+  language_code: "en-US"
+  gender: "MALE"
+  speaking_rate: 1.0
+  pitch: 0.0
+
+female_default:
+  name: "en-US-Neural2-F" # Standard female
+  language_code: "en-US"
+  gender: "FEMALE"
+  speaking_rate: 1.0
+  pitch: 0.0
+
+child_default:
+  name: "en-US-News-K" # Higher pitch, often used for younger voices
+  language_code: "en-US"
+  gender: "FEMALE"
+  speaking_rate: 1.1
+  pitch: 2.0
+# Specific character overrides can be added here
+# hero:
+#   name: "en-US-Studio-M"
+#   ...
