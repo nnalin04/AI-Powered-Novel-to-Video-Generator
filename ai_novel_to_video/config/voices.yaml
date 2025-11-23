@@ -1,34 +1,206 @@
 # Voice Profiles Configuration
-# Using Google Cloud TTS Neural2 and Studio voices for high quality
+# Comprehensive profiles for character-based voice intelligence
+# Format: {age}_{gender}_{style}
 
+# ============================================================
+# NARRATOR
+# ============================================================
 narrator:
-  name: "en-US-Neural2-D" # Deep, authoritative male
+  name: "en-US-Neural2-D"
   language_code: "en-US"
   gender: "MALE"
   speaking_rate: 1.0
   pitch: 0.0
 
+# ============================================================
+# CHILD VOICES (5-12 years)
+# ============================================================
+child_female_soft:
+  name: "en-US-Neural2-F"
+  language_code: "en-US"
+  gender: "FEMALE"
+  speaking_rate: 1.15
+  pitch: 4.0
+
+child_female_energetic:
+  name: "en-US-Neural2-C"
+  language_code: "en-US"
+  gender: "FEMALE"
+  speaking_rate: 1.25
+  pitch: 5.0
+
+child_male_soft:
+  name: "en-US-Neural2-I"
+  language_code: "en-US"
+  gender: "MALE"
+  speaking_rate: 1.15
+  pitch: 3.0
+
+child_male_energetic:
+  name: "en-US-Neural2-J"
+  language_code: "en-US"
+  gender: "MALE"
+  speaking_rate: 1.25
+  pitch: 4.0
+
+# ============================================================
+# TEEN VOICES (13-19 years)
+# ============================================================
+teen_female:
+  name: "en-US-Neural2-E"
+  language_code: "en-US"
+  gender: "FEMALE"
+  speaking_rate: 1.1
+  pitch: 2.0
+
+teen_male:
+  name: "en-US-Neural2-A"
+  language_code: "en-US"
+  gender: "MALE"
+  speaking_rate: 1.1
+  pitch: 1.5
+
+# ============================================================
+# YOUNG ADULT VOICES (20-35 years)
+# ============================================================
+young_adult_female_soft:
+  name: "en-US-Neural2-F"
+  language_code: "en-US"
+  gender: "FEMALE"
+  speaking_rate: 1.0
+  pitch: 0.5
+
+young_adult_female_energetic:
+  name: "en-US-Neural2-C"
+  language_code: "en-US"
+  gender: "FEMALE"
+  speaking_rate: 1.15
+  pitch: 1.5
+
+young_adult_female_calm:
+  name: "en-US-Neural2-E"
+  language_code: "en-US"
+  gender: "FEMALE"
+  speaking_rate: 0.95
+  pitch: 0.0
+
+young_adult_male_soft:
+  name: "en-US-Neural2-I"
+  language_code: "en-US"
+  gender: "MALE"
+  speaking_rate: 1.0
+  pitch: 0.0
+
+young_adult_male_energetic:
+  name: "en-US-Neural2-J"
+  language_code: "en-US"
+  gender: "MALE"
+  speaking_rate: 1.15
+  pitch: 1.0
+
+young_adult_male_calm:
+  name: "en-US-Neural2-A"
+  language_code: "en-US"
+  gender: "MALE"
+  speaking_rate: 0.95
+  pitch: -0.5
+
+# ============================================================
+# ADULT VOICES (36-55 years)
+# ============================================================
+adult_female_soft:
+  name: "en-US-Neural2-F"
+  language_code: "en-US"
+  gender: "FEMALE"
+  speaking_rate: 0.95
+  pitch: 0.0
+
+adult_female_confident:
+  name: "en-US-Neural2-E"
+  language_code: "en-US"
+  gender: "FEMALE"
+  speaking_rate: 1.0
+  pitch: -0.5
+
+adult_female_dramatic:
+  name: "en-US-Neural2-C"
+  language_code: "en-US"
+  gender: "FEMALE"
+  speaking_rate: 0.9
+  pitch: 1.0
+
+adult_male_soft:
+  name: "en-US-Neural2-I"
+  language_code: "en-US"
+  gender: "MALE"
+  speaking_rate: 0.95
+  pitch: -0.5
+
+adult_male_confident:
+  name: "en-US-Neural2-A"
+  language_code: "en-US"
+  gender: "MALE"
+  speaking_rate: 1.0
+  pitch: -1.0
+
+adult_male_dramatic:
+  name: "en-US-Neural2-J"
+  language_code: "en-US"
+  gender: "MALE"
+  speaking_rate: 0.9
+  pitch: 0.5
+
+# ============================================================
+# ELDERLY VOICES (56+ years)
+# ============================================================
+elderly_female_gentle:
+  name: "en-US-Neural2-F"
+  language_code: "en-US"
+  gender: "FEMALE"
+  speaking_rate: 0.85
+  pitch: -1.0
+
+elderly_female_wise:
+  name: "en-US-Neural2-E"
+  language_code: "en-US"
+  gender: "FEMALE"
+  speaking_rate: 0.9
+  pitch: -1.5
+
+elderly_male_gentle:
+  name: "en-US-Neural2-I"
+  language_code: "en-US"
+  gender: "MALE"
+  speaking_rate: 0.85
+  pitch: -2.0
+
+elderly_male_wise:
+  name: "en-US-Neural2-D"
+  language_code: "en-US"
+  gender: "MALE"
+  speaking_rate: 0.9
+  pitch: -2.5
+
+# ============================================================
+# LEGACY FALLBACK PROFILES (for backward compatibility)
+# ============================================================
 male_default:
-  name: "en-US-Neural2-I" # Standard male
+  name: "en-US-Neural2-I"
   language_code: "en-US"
   gender: "MALE"
   speaking_rate: 1.0
   pitch: 0.0
 
 female_default:
-  name: "en-US-Neural2-F" # Standard female
+  name: "en-US-Neural2-F"
   language_code: "en-US"
   gender: "FEMALE"
   speaking_rate: 1.0
   pitch: 0.0
 
 child_default:
-  name: "en-US-News-K" # Higher pitch, often used for younger voices
+  name: "en-US-News-K"
   language_code: "en-US"
   gender: "FEMALE"
   speaking_rate: 1.1
   pitch: 2.0
-# Specific character overrides can be added here
-# hero:
-#   name: "en-US-Studio-M"
-#   ...

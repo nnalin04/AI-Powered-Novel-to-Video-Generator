@@ -1,4 +1,12 @@
 1
-00:00:00,000 --> 00:00:05,000
-This is a test story for the refactored pipeline. It should generate a video..
+00:00:00,000 --> 00:00:29,620
+It’s a bright Saturday morning at Maple Park. The playground is full of laughter. Swings creak, birds chirp, and a soft breeze moves the leaves. In one corner, three 7–8-year-old kids—Riyan, Tara, and Ishu—are gathered near the slides, wearing paper headbands with a hand-drawn Leaf Village symbol. Alright, team! Today’s mission is to protect the park from imaginary rogue ninjas! I call dibs on being like Sakura! I’ll do the healing… and punching. And I’m Naruto! Believe it!
+
+2
+00:00:29,620 --> 00:00:44,300
+Okay, ninja training warm-up! Jump, flip, dodge! Shadow Step Technique! Time for Jutsu practice! Watch my Rasengan! Whoa, powerful! But can you dodge my paper-shuriken? Look! A rogue ninja stole the treasure! We must retrieve the Sacred Ball!
+
+3
+00:00:44,300 --> 00:01:08,070
+Looks like you little ninjas scared him into surrender! Mission success! You both were amazing. Especially my healing punch! And my Rasengan saved the day. Obviously. Tomorrow, new mission? Yes! Believe it! Yes! Believe it! The camera pulls back, showing the park full of happy kids, swings moving, the sun shining—just three mini ninjas imagining a grand adventure in their world of play.
 

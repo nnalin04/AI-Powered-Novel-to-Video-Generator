@@ -7,29 +7,47 @@ import logging
 # Setup logger for retry attempts
 logger = logging.getLogger(__name__)
 
-# Try importing vertexai, but handle the case where it's not installed or credentials fail
+# Try importing google.genai for image generation
 try:
-    import vertexai
-    from vertexai.preview.vision_models import ImageGenerationModel
-    VERTEX_AI_AVAILABLE = True
+    from google import genai
+    from google.genai import types
+    GENAI_AVAILABLE = True
 except ImportError:
-    VERTEX_AI_AVAILABLE = False
+    GENAI_AVAILABLE = False
 
 class ImageGenerator:
     def __init__(self, project_id: Optional[str] = None, location: str = "us-central1"):
         self.project_id = project_id or os.environ.get("GOOGLE_CLOUD_PROJECT")
-        self.location = location
-        self.model = None
+        self.location = location or os.environ.get("GOOGLE_CLOUD_LOCATION", "us-central1")
+        self.client = None
         self.quota_exceeded = False  # Track quota state
         
-        if VERTEX_AI_AVAILABLE and self.project_id:
+        if GENAI_AVAILABLE:
             try:
-                vertexai.init(project=self.project_id, location=self.location)
-                self.model = ImageGenerationModel.from_pretrained("imagegeneration@006")
+                # Check if using Vertex AI mode
+                use_vertexai = os.environ.get("GOOGLE_GENAI_USE_VERTEXAI", "").lower() == "true"
+                
+                if use_vertexai:
+                    # Vertex AI mode (required for Imagen)
+                    if not self.project_id:
+                        print("Warning: GOOGLE_GENAI_USE_VERTEXAI is true but GOOGLE_CLOUD_PROJECT not set. Using Mock mode.")
+                    else:
+                        self.client = genai.Client(vertexai=True, project=self.project_id, location=self.location)
+                        self.model_name = 'imagen-3.0-generate-002'
+                        print(f"Initialized Imagen with Vertex AI (project: {self.project_id}, location: {self.location})")
+                else:
+                    # Developer API mode - check if Imagen is available
+                    api_key = os.environ.get("GOOGLE_API_KEY") or os.environ.get("GEMINI_API_KEY")
+                    if api_key:
+                        self.client = genai.Client(api_key=api_key)
+                        self.model_name = 'imagen-3.0-generate-002'
+                        print("Initialized Imagen with Developer API (Note: Imagen may not be available)")
+                    else:
+                        print("Warning: No API key or Vertex AI config found. Using Mock mode.")
             except Exception as e:
-                print(f"Warning: Failed to initialize Vertex AI: {e}")
+                print(f"Warning: Failed to initialize Google GenAI: {e}")
         else:
-            print("Warning: Vertex AI not available or Project ID not set. Using Mock mode.")
+            print("Warning: Google GenAI SDK not available. Using Mock mode.")
 
     @retry(
         stop=stop_after_attempt(3),
@@ -44,16 +62,24 @@ class ImageGenerator:
             # Skip retry if quota is exceeded
             raise Exception("Quota exceeded, using mock mode")
         
-        images = self.model.generate_images(
+        # Generate images using new SDK
+        response = self.client.models.generate_images(
+            model=self.model_name,
             prompt=prompt,
-            number_of_images=1,
-            language="en",
-            aspect_ratio="16:9",  # Default to full video aspect ratio
-            safety_filter_level="block_some",
-            person_generation="allow_adult",
+            config=types.GenerateImagesConfig(
+                number_of_images=1,
+                aspect_ratio="16:9",
+                safety_filter_level="block_medium_and_above",
+                person_generation="allow_adult",
+                include_rai_reason=False,
+                output_mime_type="image/jpeg"
+            )
         )
-        if images:
-            images[0].save(location=output_path, include_generation_parameters=False)
+        
+        if response.generated_images:
+            # Save the generated image
+            image = response.generated_images[0].image
+            image.save(output_path)
             return output_path
         return None
 
@@ -62,7 +88,7 @@ class ImageGenerator:
         Generates an image from a prompt and saves it to the output path.
         Returns the path to the saved image or None if failed.
         """
-        if self.model and not self.quota_exceeded:
+        if self.client and not self.quota_exceeded:
             try:
                 print(f"Generating image for prompt: {prompt[:50]}...")
                 return self._generate_with_retry(prompt, output_path)
@@ -70,10 +96,10 @@ class ImageGenerator:
                 error_str = str(e).lower()
                 # Check for quota errors
                 if 'quota' in error_str or 'resource exhausted' in error_str:
-                    print(f"Quota exceeded for Vertex AI. Switching to mock mode permanently.")
+                    print(f"Quota exceeded for Imagen. Switching to mock mode permanently.")
                     self.quota_exceeded = True
                 else:
-                    print(f"Error generating image with Vertex AI: {e}")
+                    print(f"Error generating image with Imagen: {e}")
                 
                 # Fallback to mock if generation fails
                 return self._generate_mock_image(prompt, output_path)

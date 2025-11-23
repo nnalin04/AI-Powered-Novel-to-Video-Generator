@@ -22,8 +22,12 @@ class VoiceGenerator:
         self.client = None
         self.rate_limit_exceeded = False  # Track rate limit state
         self.voice_profiles = {}
+        self.character_voice_cache = {}  # NEW: Cache for character voice consistency
+        
+        # Load voice profiles
         self.load_voice_profiles()
         
+        # Initialize Google Cloud TTS client
         if TTS_AVAILABLE:
             try:
                 # This will look for GOOGLE_APPLICATION_CREDENTIALS env var
@@ -51,33 +55,144 @@ class VoiceGenerator:
             print(f"Error loading voice profiles: {e}")
             self.voice_profiles = {}
 
-    def get_voice_for_character(self, character_name: str) -> dict:
-        """Determines the best voice profile for a given character name."""
+    def get_voice_for_character(self, character_name: str, traits: dict = None) -> dict:
+        """
+        Determines the best voice profile for a character based on traits.
+        
+        Args:
+            character_name: Name of the character
+            traits: Dict with age, gender, personality, emotional_tone
+        
+        Returns:
+            Voice profile dict with TTS parameters
+        """
         if not self.voice_profiles:
             return {}
-
+        
+        # Check cache first for consistency
+        if character_name in self.character_voice_cache:
+            return self.character_voice_cache[character_name]
+        
+        # If traits provided, use intelligent selection
+        if traits and isinstance(traits, dict):
+            voice_profile = self._select_voice_from_traits(traits, character_name)
+        else:
+            # Fallback to legacy heuristic-based selection
+            voice_profile = self._legacy_voice_selection(character_name)
+        
+        # Cache the selection for consistency
+        self.character_voice_cache[character_name] = voice_profile
+        return voice_profile
+    
+    def _select_voice_from_traits(self, traits: dict, character_name: str) -> dict:
+        """Select voice based on character traits."""
+        age = traits.get('age', 'adult').lower()
+        gender = traits.get('gender', 'neutral').lower()
+        personality = traits.get('personality', [])
+        emotional_tone = traits.get('emotional_tone', 'neutral').lower()
+        
+        # Handle narrator specially
+        if 'narrator' in character_name.lower():
+            return self.voice_profiles.get('narrator', {})
+        
+        # Normalize age categories
+        age_map = {
+            'child': 'child',
+            'kid': 'child',
+            'young': 'child',
+            'little': 'child',
+            'teen': 'teen',
+            'teenager': 'teen',
+            'young_adult': 'young_adult',
+            'young adult': 'young_adult',
+            'adult': 'adult',
+            'elderly': 'elderly',
+            'old': 'elderly',
+            'elder': 'elderly'
+        }
+        age = age_map.get(age, 'adult')
+        
+        # Normalize gender
+        if gender not in ['male', 'female']:
+            gender = 'male'  # Default
+        
+        # Determine style based on personality and emotional tone
+        style = self._determine_style(personality, emotional_tone)
+        
+        # Build voice profile key
+        voice_key = f"{age}_{gender}"
+        if style:
+            voice_key += f"_{style}"
+        
+        # Try to find exact match
+        if voice_key in self.voice_profiles:
+            return self.voice_profiles[voice_key]
+        
+        # Try without style
+        base_key = f"{age}_{gender}"
+        if base_key in self.voice_profiles:
+            return self.voice_profiles[base_key]
+        
+        # Fallback to gender default
+        return self.voice_profiles.get(f"{gender}_default", self.voice_profiles.get('male_default', {}))
+    
+    def _determine_style(self, personality: list, emotional_tone: str) -> str:
+        """Determine voice style from personality traits and emotional tone."""
+        if not isinstance(personality, list):
+            personality = []
+        
+        # Priority order for style selection
+        style_keywords = {
+            'soft': ['shy', 'gentle', 'soft', 'quiet', 'timid'],
+            'energetic': ['energetic', 'bold', 'excited', 'cheerful', 'lively'],
+            'calm': ['calm', 'peaceful', 'serene', 'wise', 'thoughtful'],
+            'dramatic': ['dramatic', 'villainous', 'dark', 'mysterious', 'intense'],
+            'confident': ['confident', 'strong', 'brave', 'heroic'],
+            'wise': ['wise', 'sage', 'elder', 'knowledgeable'],
+            'gentle': ['gentle', 'kind', 'caring', 'nurturing']
+        }
+        
+        # Check emotional tone first
+        for style, keywords in style_keywords.items():
+            if emotional_tone in keywords:
+                return style
+        
+        # Check personality traits
+        for style, keywords in style_keywords.items():
+            if any(trait.lower() in keywords for trait in personality):
+                return style
+        
+        return ''  # No specific style
+    
+    def _legacy_voice_selection(self, character_name: str) -> dict:
+        """Legacy heuristic-based voice selection (fallback)."""
         name_lower = character_name.lower()
         
-        # 1. Check for Narrator
+        # Check for Narrator
         if "narrator" in name_lower:
             return self.voice_profiles.get('narrator', {})
         
-        # 2. Check for exact match in config (if we add specific characters later)
+        # Check for exact match
         if name_lower in self.voice_profiles:
             return self.voice_profiles[name_lower]
 
-        # 3. Gender/Age Heuristics
-        female_keywords = ['mrs.', 'ms.', 'miss', 'lady', 'woman', 'mother', 'mom', 'aunt', 'sister', 'queen', 'princess']
-        child_keywords = ['child', 'kid', 'boy', 'girl', 'young', 'baby', 'son', 'daughter']
+        # Gender/Age Heuristics
+        female_keywords = ['mrs.', 'ms.', 'miss', 'lady', 'woman', 'mother', 'mom', 'aunt', 'sister', 'queen', 'princess', 'girl', 'she', 'her']
+        child_keywords = ['child', 'kid', 'boy', 'girl', 'young', 'baby', 'son', 'daughter', 'little']
         
-        if any(k in name_lower for k in child_keywords):
-            return self.voice_profiles.get('child_default', self.voice_profiles.get('female_default', {}))
-            
-        if any(k in name_lower for k in female_keywords):
+        is_female = any(k in name_lower for k in female_keywords)
+        is_child = any(k in name_lower for k in child_keywords)
+        
+        if is_child:
+            if is_female:
+                return self.voice_profiles.get('child_female_soft', self.voice_profiles.get('child_default', {}))
+            else:
+                return self.voice_profiles.get('child_male_soft', self.voice_profiles.get('child_default', {}))
+        
+        if is_female:
             return self.voice_profiles.get('female_default', {})
-
-        # 4. Default to male
-        return self.voice_profiles.get('male_default', {})
+        else:
+            return self.voice_profiles.get('male_default', {})
 
     @retry(
         stop=stop_after_attempt(3),
@@ -213,7 +328,7 @@ class VoiceGenerator:
         Generates a conversation audio file from a script.
         
         Args:
-            audio_script: List of dicts with 'speaker' and 'text'.
+            audio_script: List of dicts with 'speaker', 'text', and optionally 'traits'.
             output_path: Path to save the final MP3.
         """
         # Check if we are effectively in mock mode
@@ -238,12 +353,17 @@ class VoiceGenerator:
             for i, segment in enumerate(audio_script):
                 speaker = segment.get('speaker', 'Narrator')
                 text = segment.get('text', '')
+                traits = segment.get('traits', None)  # NEW: Extract traits
                 
                 if not text.strip():
                     continue
                     
-                # Get voice profile
-                voice_params = self.get_voice_for_character(speaker)
+                # Get voice profile with traits (if available)
+                voice_params = self.get_voice_for_character(speaker, traits=traits)
+                
+                # Log voice selection for debugging
+                if traits:
+                    print(f"Voice for {speaker} (age:{traits.get('age','?')}, gender:{traits.get('gender','?')}): {voice_params.get('name','default')}")
                 
                 # Generate segment audio
                 segment_path = os.path.join(temp_dir, f"seg_{i}.mp3")

@@ -15,3 +15,301 @@
 2025-11-20 00:09:01,761 INFO Uploading to YouTube...
 2025-11-20 00:09:01,761 INFO Pipeline completed successfully.
 2025-11-20 18:42:56,242 INFO Initializing VideoGenerationPipeline services...
+2025-11-22 22:32:17,644 INFO Initializing VideoGenerationPipeline services...
+2025-11-22 22:32:21,046 INFO Initializing VideoGenerationPipeline services...
+2025-11-22 22:32:32,235 INFO Starting process_request. Input Type: text, Video Type: short
+2025-11-22 22:32:32,237 INFO Extracted Text Length: 578
+2025-11-22 22:32:32,237 INFO Text segmented into 1 parts.
+2025-11-22 22:32:32,239 INFO Processing segment 1/1
+2025-11-22 22:32:32,574 INFO Generated screenplay for segment 1
+2025-11-22 22:32:32,574 WARNING Screenplay parsing fallback used for segment 1: 404 models/gemini-1.5-pro is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+2025-11-22 22:32:41,956 INFO Generated image for segment 1
+2025-11-22 22:32:41,956 INFO Generating multi-voice conversation for segment 1
+2025-11-22 22:32:42,795 INFO Generated voice for segment 1
+2025-11-22 22:32:42,795 INFO Generating subtitles...
+2025-11-22 22:32:42,824 INFO Assembling video...
+2025-11-22 22:33:33,542 INFO Generating thumbnail...
+2025-11-22 22:33:43,149 INFO Uploading to YouTube...
+2025-11-22 22:33:43,149 INFO Pipeline completed successfully.
+2025-11-22 22:36:47,655 INFO Starting process_request. Input Type: url, Video Type: full
+2025-11-22 22:36:48,597 INFO Extracted Text Length: 2040
+2025-11-22 22:36:48,597 INFO Text segmented into 3 parts.
+2025-11-22 22:36:48,598 INFO Processing segment 1/3
+2025-11-22 22:36:48,753 INFO Generated screenplay for segment 1
+2025-11-22 22:36:48,753 WARNING Screenplay parsing fallback used for segment 1: 404 models/gemini-1.5-pro is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+2025-11-22 22:36:58,311 INFO Generated image for segment 1
+2025-11-22 22:36:58,312 INFO Generating multi-voice conversation for segment 1
+2025-11-22 22:37:00,111 INFO Generated voice for segment 1
+2025-11-22 22:37:00,112 INFO Processing segment 2/3
+2025-11-22 22:37:00,223 INFO Generated screenplay for segment 2
+2025-11-22 22:37:00,223 WARNING Screenplay parsing fallback used for segment 2: 404 models/gemini-1.5-pro is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+2025-11-22 22:37:09,407 INFO Generated image for segment 2
+2025-11-22 22:37:09,408 INFO Generating multi-voice conversation for segment 2
+2025-11-22 22:37:11,189 INFO Generated voice for segment 2
+2025-11-22 22:37:11,189 INFO Processing segment 3/3
+2025-11-22 22:37:11,303 INFO Generated screenplay for segment 3
+2025-11-22 22:37:11,303 WARNING Screenplay parsing fallback used for segment 3: 404 models/gemini-1.5-pro is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+2025-11-22 22:37:20,421 INFO Generated image for segment 3
+2025-11-22 22:37:20,421 INFO Generating multi-voice conversation for segment 3
+2025-11-22 22:37:25,154 INFO Generated voice for segment 3
+2025-11-22 22:37:25,154 INFO Generating subtitles...
+2025-11-22 22:37:25,271 INFO Assembling video...
+2025-11-22 22:41:28,364 INFO Generating thumbnail...
+2025-11-22 22:41:39,065 INFO Uploading to YouTube...
+2025-11-22 22:41:39,066 INFO Pipeline completed successfully.
+2025-11-23 21:02:11,669 INFO Initializing VideoGenerationPipeline services...
+2025-11-23 21:02:11,780 INFO Starting process_request. Input Type: text, Video Type: standard
+2025-11-23 21:02:11,780 INFO Extracted Text Length: 1069
+2025-11-23 21:02:11,780 INFO Text segmented into 2 parts.
+2025-11-23 21:02:11,781 INFO Processing segment 1/2
+2025-11-23 21:02:21,551 INFO Generated screenplay for segment 1
+2025-11-23 21:02:26,008 INFO Generated image for segment 1
+2025-11-23 21:02:26,008 INFO Generating multi-voice conversation for segment 1
+2025-11-23 21:02:29,731 INFO Generated voice for segment 1
+2025-11-23 21:02:29,731 INFO Processing segment 2/2
+2025-11-23 21:02:37,622 INFO Generated screenplay for segment 2
+2025-11-23 21:02:42,084 INFO Generated image for segment 2
+2025-11-23 21:02:42,084 INFO Generating multi-voice conversation for segment 2
+2025-11-23 21:02:43,332 INFO Generated voice for segment 2
+2025-11-23 21:02:43,333 INFO Generating subtitles...
+2025-11-23 21:02:43,383 INFO Assembling video...
+2025-11-23 21:04:56,326 INFO Generating thumbnail...
+2025-11-23 21:05:00,839 INFO Uploading to YouTube...
+2025-11-23 21:05:00,839 INFO Pipeline completed successfully.
+2025-11-23 21:45:59,125 INFO Initializing VideoGenerationPipeline services...
+2025-11-23 21:46:02,937 INFO Using image-based video assembly (Veo disabled or unavailable)
+2025-11-23 21:46:02,937 INFO Starting process_request. Input Type: text, Video Type: standard
+2025-11-23 21:46:02,937 INFO Extracted Text Length: 75
+2025-11-23 21:46:02,937 INFO Text segmented into 1 parts.
+2025-11-23 21:46:02,938 INFO Processing segment 1/1
+2025-11-23 21:46:05,385 INFO Generated screenplay for segment 1
+2025-11-23 21:46:11,747 INFO Generated image for segment 1
+2025-11-23 21:46:11,748 INFO Generating multi-voice conversation for segment 1
+2025-11-23 21:46:12,563 INFO Generated voice for segment 1
+2025-11-23 21:46:12,563 INFO Generating subtitles...
+2025-11-23 21:46:12,589 INFO Assembling video...
+2025-11-23 21:46:12,789 ERROR Pipeline error: [Errno 32] Broken pipe
+Traceback (most recent call last):
+  File "/Users/nishitnalinsrivastava/dev/AI Agent/AI-Powered Novel-to-Video Generator/ai_novel_to_video/services/video_assembler.py", line 103, in assemble_video
+    final_video.write_videofile(output_path, fps=fps, codec='libx264', audio_codec='aac')
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nishitnalinsrivastava/dev/AI Agent/AI-Powered Novel-to-Video Generator/venv/lib/python3.13/site-packages/decorator.py", line 235, in fun
+    return caller(func, *(extras + args), **kw)
+  File "/Users/nishitnalinsrivastava/dev/AI Agent/AI-Powered Novel-to-Video Generator/venv/lib/python3.13/site-packages/moviepy/decorators.py", line 53, in requires_duration
+    return func(clip, *args, **kwargs)
+  File "/Users/nishitnalinsrivastava/dev/AI Agent/AI-Powered Novel-to-Video Generator/venv/lib/python3.13/site-packages/decorator.py", line 235, in fun
+    return caller(func, *(extras + args), **kw)
+  File "/Users/nishitnalinsrivastava/dev/AI Agent/AI-Powered Novel-to-Video Generator/venv/lib/python3.13/site-packages/moviepy/decorators.py", line 153, in wrapper
+    return func(clip, *new_args, **new_kwargs)
+  File "/Users/nishitnalinsrivastava/dev/AI Agent/AI-Powered Novel-to-Video Generator/venv/lib/python3.13/site-packages/decorator.py", line 235, in fun
+    return caller(func, *(extras + args), **kw)
+  File "/Users/nishitnalinsrivastava/dev/AI Agent/AI-Powered Novel-to-Video Generator/venv/lib/python3.13/site-packages/moviepy/decorators.py", line 24, in convert_masks_to_RGB
+    return func(clip, *args, **kwargs)
+  File "/Users/nishitnalinsrivastava/dev/AI Agent/AI-Powered Novel-to-Video Generator/venv/lib/python3.13/site-packages/decorator.py", line 235, in fun
+    return caller(func, *(extras + args), **kw)
+  File "/Users/nishitnalinsrivastava/dev/AI Agent/AI-Powered Novel-to-Video Generator/venv/lib/python3.13/site-packages/moviepy/decorators.py", line 102, in wrapper
+    return func(*new_args, **new_kwargs)
+  File "/Users/nishitnalinsrivastava/dev/AI Agent/AI-Powered Novel-to-Video Generator/venv/lib/python3.13/site-packages/moviepy/video/VideoClip.py", line 379, in write_videofile
+    self.audio.write_audiofile(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        audiofile,
+        ^^^^^^^^^^
+    ...<6 lines>...
+        logger=logger,
+        ^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/nishitnalinsrivastava/dev/AI Agent/AI-Powered Novel-to-Video Generator/venv/lib/python3.13/site-packages/decorator.py", line 235, in fun
+    return caller(func, *(extras + args), **kw)
+  File "/Users/nishitnalinsrivastava/dev/AI Agent/AI-Powered Novel-to-Video Generator/venv/lib/python3.13/site-packages/moviepy/decorators.py", line 53, in requires_duration
+    return func(clip, *args, **kwargs)
+  File "/Users/nishitnalinsrivastava/dev/AI Agent/AI-Powered Novel-to-Video Generator/venv/lib/python3.13/site-packages/decorator.py", line 235, in fun
+    return caller(func, *(extras + args), **kw)
+  File "/Users/nishitnalinsrivastava/dev/AI Agent/AI-Powered Novel-to-Video Generator/venv/lib/python3.13/site-packages/moviepy/decorators.py", line 102, in wrapper
+    return func(*new_args, **new_kwargs)
+  File "/Users/nishitnalinsrivastava/dev/AI Agent/AI-Powered Novel-to-Video Generator/venv/lib/python3.13/site-packages/moviepy/audio/AudioClip.py", line 258, in write_audiofile
+    return ffmpeg_audiowrite(
+        self,
+    ...<8 lines>...
+        logger=logger,
+    )
+  File "/Users/nishitnalinsrivastava/dev/AI Agent/AI-Powered Novel-to-Video Generator/venv/lib/python3.13/site-packages/decorator.py", line 235, in fun
+    return caller(func, *(extras + args), **kw)
+  File "/Users/nishitnalinsrivastava/dev/AI Agent/AI-Powered Novel-to-Video Generator/venv/lib/python3.13/site-packages/moviepy/decorators.py", line 53, in requires_duration
+    return func(clip, *args, **kwargs)
+  File "/Users/nishitnalinsrivastava/dev/AI Agent/AI-Powered Novel-to-Video Generator/venv/lib/python3.13/site-packages/moviepy/audio/io/ffmpeg_audiowriter.py", line 220, in ffmpeg_audiowrite
+    for chunk in clip.iter_chunks(
+                 ~~~~~~~~~~~~~~~~^
+        chunksize=buffersize, quantize=True, nbytes=nbytes, fps=fps, logger=logger
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ):
+    ^
+  File "/Users/nishitnalinsrivastava/dev/AI Agent/AI-Powered Novel-to-Video Generator/venv/lib/python3.13/site-packages/moviepy/audio/AudioClip.py", line 108, in iter_chunks
+    for i in logger.iter_bar(chunk=list(range(nchunks))):
+             ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nishitnalinsrivastava/dev/AI Agent/AI-Powered Novel-to-Video Generator/venv/lib/python3.13/site-packages/proglog/proglog.py", line 199, in iter_bar
+    self(**{bar + "__total": len(iterable)})
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nishitnalinsrivastava/dev/AI Agent/AI-Powered Novel-to-Video Generator/venv/lib/python3.13/site-packages/proglog/proglog.py", line 263, in __call__
+    self.bars_callback(bar, attr, value, old_value)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nishitnalinsrivastava/dev/AI Agent/AI-Powered Novel-to-Video Generator/venv/lib/python3.13/site-packages/proglog/proglog.py", line 347, in bars_callback
+    self.new_tqdm_bar(bar)
+    ~~~~~~~~~~~~~~~~~^^^^^
+  File "/Users/nishitnalinsrivastava/dev/AI Agent/AI-Powered Novel-to-Video Generator/venv/lib/python3.13/site-packages/proglog/proglog.py", line 332, in new_tqdm_bar
+    self.tqdm_bars[bar] = self.tqdm(
+                          ~~~~~~~~~^
+        total=infos["total"],
+        ^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        leave=self.leave_bars,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/nishitnalinsrivastava/dev/AI Agent/AI-Powered Novel-to-Video Generator/venv/lib/python3.13/site-packages/tqdm/std.py", line 1098, in __init__
+    self.refresh(lock_args=self.lock_args)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nishitnalinsrivastava/dev/AI Agent/AI-Powered Novel-to-Video Generator/venv/lib/python3.13/site-packages/tqdm/std.py", line 1347, in refresh
+    self.display()
+    ~~~~~~~~~~~~^^
+  File "/Users/nishitnalinsrivastava/dev/AI Agent/AI-Powered Novel-to-Video Generator/venv/lib/python3.13/site-packages/tqdm/std.py", line 1495, in display
+    self.sp(self.__str__() if msg is None else msg)
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nishitnalinsrivastava/dev/AI Agent/AI-Powered Novel-to-Video Generator/venv/lib/python3.13/site-packages/tqdm/std.py", line 459, in print_status
+    fp_write('\r' + s + (' ' * max(last_len[0] - len_s, 0)))
+    ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nishitnalinsrivastava/dev/AI Agent/AI-Powered Novel-to-Video Generator/venv/lib/python3.13/site-packages/tqdm/std.py", line 452, in fp_write
+    fp.write(str(s))
+    ~~~~~~~~^^^^^^^^
+  File "/Users/nishitnalinsrivastava/dev/AI Agent/AI-Powered Novel-to-Video Generator/venv/lib/python3.13/site-packages/tqdm/utils.py", line 196, in inner
+    return func(*args, **kwargs)
+BrokenPipeError: [Errno 32] Broken pipe
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/nishitnalinsrivastava/dev/AI Agent/AI-Powered Novel-to-Video Generator/ai_novel_to_video/processing/pipeline.py", line 175, in process_request
+    final_video = self.video_assembler.assemble_video(scenes, video_path)
+  File "/Users/nishitnalinsrivastava/dev/AI Agent/AI-Powered Novel-to-Video Generator/ai_novel_to_video/services/video_assembler.py", line 115, in assemble_video
+    traceback.print_exc()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.13/3.13.1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/traceback.py", line 208, in print_exc
+    print_exception(sys.exception(), limit=limit, file=file, chain=chain)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.13/3.13.1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/traceback.py", line 130, in print_exception
+    te.print(file=file, chain=chain, colorize=colorize)
+    ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.13/3.13.1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/traceback.py", line 1455, in print
+    print(line, file=file, end="")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+BrokenPipeError: [Errno 32] Broken pipe
+2025-11-23 21:57:06,509 INFO Initializing VideoGenerationPipeline services...
+2025-11-23 21:57:06,540 WARNING ScreenplayGenerator initialization warning: GOOGLE_CLOUD_PROJECT environment variable not set for Vertex AI.
+2025-11-23 21:57:06,540 INFO Using image-based video assembly (Veo disabled or unavailable)
+2025-11-23 21:57:07,310 INFO Initializing VideoGenerationPipeline services...
+2025-11-23 21:57:07,318 WARNING ScreenplayGenerator initialization warning: GOOGLE_CLOUD_PROJECT environment variable not set for Vertex AI.
+2025-11-23 21:57:07,318 INFO Using image-based video assembly (Veo disabled or unavailable)
+2025-11-23 21:57:53,710 INFO Initializing VideoGenerationPipeline services...
+2025-11-23 21:57:57,657 INFO Veo video generation enabled
+2025-11-23 21:57:58,753 INFO Initializing VideoGenerationPipeline services...
+2025-11-23 21:58:01,322 INFO Veo video generation enabled
+2025-11-23 21:59:45,902 INFO Starting process_request. Input Type: text, Video Type: short
+2025-11-23 21:59:45,904 INFO Extracted Text Length: 714
+2025-11-23 21:59:45,904 INFO Text segmented into 1 parts.
+2025-11-23 21:59:45,905 INFO Processing segment 1/1
+2025-11-23 21:59:50,746 INFO Generated screenplay for segment 1
+2025-11-23 21:59:57,374 INFO Generated image for segment 1
+2025-11-23 22:00:15,250 INFO Generated Veo video for segment 1
+2025-11-23 22:00:15,250 INFO Generating multi-voice conversation for segment 1
+2025-11-23 22:00:17,295 INFO Generated voice for segment 1
+2025-11-23 22:00:17,295 INFO Generating subtitles...
+2025-11-23 22:00:17,328 INFO Assembling video...
+2025-11-23 22:00:44,738 INFO Generating thumbnail...
+2025-11-23 22:00:55,944 INFO Uploading to YouTube...
+2025-11-23 22:00:55,944 INFO Pipeline completed successfully.
+2025-11-23 22:07:17,652 INFO Initializing VideoGenerationPipeline services...
+2025-11-23 22:07:21,680 INFO Veo video generation enabled
+2025-11-23 22:09:13,763 INFO Initializing VideoGenerationPipeline services...
+2025-11-23 22:09:17,532 INFO Veo video generation enabled
+2025-11-23 22:09:17,532 INFO Starting process_request. Input Type: text, Video Type: standard
+2025-11-23 22:09:17,532 INFO Extracted Text Length: 75
+2025-11-23 22:09:17,532 INFO Text segmented into 1 parts.
+2025-11-23 22:09:17,532 INFO Processing segment 1/1
+2025-11-23 22:09:20,016 INFO Generated screenplay for segment 1
+2025-11-23 22:09:27,139 INFO Generated image for segment 1
+2025-11-23 22:09:45,144 INFO Generated Veo video for segment 1
+2025-11-23 22:09:45,144 INFO Generating multi-voice conversation for segment 1
+2025-11-23 22:09:45,710 INFO Generated voice for segment 1
+2025-11-23 22:09:45,710 INFO Generating subtitles...
+2025-11-23 22:09:45,738 INFO Assembling video...
+2025-11-23 22:09:53,447 INFO Generating thumbnail...
+2025-11-23 22:10:04,306 INFO Uploading to YouTube...
+2025-11-23 22:10:04,306 INFO Pipeline completed successfully.
+2025-11-23 22:11:47,134 INFO Initializing VideoGenerationPipeline services...
+2025-11-23 22:11:51,087 INFO Veo video generation enabled
+2025-11-23 22:11:51,919 INFO Initializing VideoGenerationPipeline services...
+2025-11-23 22:11:55,652 INFO Veo video generation enabled
+2025-11-23 22:11:59,185 INFO Starting process_request. Input Type: text, Video Type: short
+2025-11-23 22:11:59,186 INFO Extracted Text Length: 714
+2025-11-23 22:11:59,186 INFO Text segmented into 1 parts.
+2025-11-23 22:11:59,187 INFO Processing segment 1/1
+2025-11-23 22:12:03,010 INFO Generated screenplay for segment 1
+2025-11-23 22:12:11,942 INFO Generated image for segment 1
+2025-11-23 22:12:29,793 INFO Generated Veo video for segment 1
+2025-11-23 22:12:29,794 INFO Generating multi-voice conversation for segment 1
+2025-11-23 22:12:31,711 INFO Generated voice for segment 1
+2025-11-23 22:12:31,711 INFO Generating subtitles...
+2025-11-23 22:12:31,742 INFO Assembling video...
+2025-11-23 22:12:47,322 INFO Generating thumbnail...
+2025-11-23 22:12:59,151 INFO Uploading to YouTube...
+2025-11-23 22:12:59,151 INFO Pipeline completed successfully.
+2025-11-23 22:20:59,624 INFO Initializing VideoGenerationPipeline services...
+2025-11-23 22:21:03,558 INFO Veo video generation enabled
+2025-11-23 22:22:01,025 INFO Initializing VideoGenerationPipeline services...
+2025-11-23 22:22:04,837 INFO Veo video generation enabled
+2025-11-23 22:22:50,166 INFO Initializing VideoGenerationPipeline services...
+2025-11-23 22:22:53,933 INFO Veo video generation enabled
+2025-11-24 03:55:46,988 INFO Initializing VideoGenerationPipeline services...
+2025-11-24 03:55:51,573 INFO Veo video generation enabled
+2025-11-24 04:24:25,240 INFO Starting process_request. Input Type: text, Video Type: short
+2025-11-24 04:24:25,252 INFO Extracted Text Length: 714
+2025-11-24 04:24:25,252 INFO Text segmented into 1 parts.
+2025-11-24 04:24:25,253 INFO Processing segment 1/1
+2025-11-24 04:24:32,154 INFO Generated screenplay for segment 1
+2025-11-24 04:24:39,536 INFO Generated image for segment 1
+2025-11-24 04:24:57,693 INFO Generated Veo video for segment 1
+2025-11-24 04:24:57,693 INFO Generating multi-voice conversation for segment 1
+2025-11-24 04:25:00,906 INFO Generated voice for segment 1
+2025-11-24 04:25:00,906 INFO Generating subtitles...
+2025-11-24 04:25:01,033 INFO Assembling video...
+2025-11-24 04:25:25,467 INFO Generating thumbnail...
+2025-11-24 04:25:35,861 INFO Uploading to YouTube...
+2025-11-24 04:25:35,861 INFO Pipeline completed successfully.
+2025-11-24 04:33:33,462 INFO Initializing VideoGenerationPipeline services...
+2025-11-24 04:33:37,325 INFO Veo video generation enabled
+2025-11-24 04:39:04,102 INFO Starting process_request. Input Type: text, Video Type: short
+2025-11-24 04:39:04,112 INFO Extracted Text Length: 2437
+2025-11-24 04:39:04,114 INFO Text segmented into 3 parts.
+2025-11-24 04:39:04,114 INFO Processing segment 1/3
+2025-11-24 04:39:10,341 INFO Generated screenplay for segment 1
+2025-11-24 04:39:15,651 INFO Generated image for segment 1
+2025-11-24 04:40:03,500 INFO Generated Veo video for segment 1
+2025-11-24 04:40:03,501 INFO Generating multi-voice conversation for segment 1
+2025-11-24 04:40:06,636 INFO Generated voice for segment 1
+2025-11-24 04:40:06,637 INFO Processing segment 2/3
+2025-11-24 04:40:12,738 INFO Generated screenplay for segment 2
+2025-11-24 04:40:17,911 INFO Generated image for segment 2
+2025-11-24 04:41:05,324 INFO Generated Veo video for segment 2
+2025-11-24 04:41:05,325 INFO Generating multi-voice conversation for segment 2
+2025-11-24 04:41:07,966 INFO Generated voice for segment 2
+2025-11-24 04:41:07,967 INFO Processing segment 3/3
+2025-11-24 04:41:14,123 INFO Generated screenplay for segment 3
+2025-11-24 04:41:19,345 INFO Generated image for segment 3
+2025-11-24 04:42:06,698 INFO Generated Veo video for segment 3
+2025-11-24 04:42:06,700 INFO Generating multi-voice conversation for segment 3
+2025-11-24 04:42:10,056 INFO Generated voice for segment 3
+2025-11-24 04:42:10,057 INFO Generating subtitles...
+2025-11-24 04:42:10,156 INFO Assembling video...
+2025-11-24 04:42:10,541 ERROR Video assembly failed.
+2025-11-24 04:45:28,604 INFO Initializing VideoGenerationPipeline services...
+2025-11-24 04:45:32,605 INFO Veo video generation enabled

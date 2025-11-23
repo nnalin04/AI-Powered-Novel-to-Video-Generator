@@ -3,6 +3,7 @@ from ai_novel_to_video.services.input_processor import InputProcessor
 from ai_novel_to_video.services.screenplay_generator import ScreenplayGenerator
 from ai_novel_to_video.services.image_generator import ImageGenerator
 from ai_novel_to_video.services.voice_generator import VoiceGenerator
+from ai_novel_to_video.services.video_generator import VideoGenerator
 from ai_novel_to_video.services.video_assembler import VideoAssembler
 from ai_novel_to_video.services.subtitle_generator import SubtitleGenerator
 from ai_novel_to_video.services.thumbnail_generator import ThumbnailGenerator
@@ -17,6 +18,7 @@ class VideoGenerationPipeline:
         self.input_processor = InputProcessor()
         self.image_generator = ImageGenerator()
         self.voice_generator = VoiceGenerator()
+        self.video_generator = VideoGenerator()  # NEW: Veo video generation
         self.video_assembler = VideoAssembler()
         self.subtitle_generator = SubtitleGenerator()
         self.thumbnail_generator = ThumbnailGenerator(self.image_generator)
@@ -27,6 +29,13 @@ class VideoGenerationPipeline:
         except ValueError as e:
             logger.warning(f"ScreenplayGenerator initialization warning: {e}")
             self.screenplay_generator = None
+        
+        # Check if we should use Veo for video generation
+        self.use_veo = os.environ.get("USE_VEO_VIDEO", "false").lower() == "true"
+        if self.use_veo and self.video_generator.client:
+            logger.info("Veo video generation enabled")
+        else:
+            logger.info("Using image-based video assembly (Veo disabled or unavailable)")
 
     def process_request(self, input_type, input_data, video_type, progress_callback=None):
         """
@@ -93,6 +102,31 @@ class VideoGenerationPipeline:
                 generated_image = self.image_generator.generate_image(image_prompt, image_path)
                 logger.info(f"Generated image for segment {i+1}")
                 
+                # Optional: Generate video from image using Veo (if enabled)
+                video_clip_path = None
+                if self.use_veo and self.video_generator.client:
+                    report_progress(f"Processing segment {i+1}/{len(segments)}: Generating Video with Veo...", current_loop_progress + (progress_per_segment * 0.45), total_steps)
+                    video_clip_path = os.path.join(output_dir, f"scene_{i+1}_veo.mp4")
+                    
+                    # Create animation prompt from scene description
+                    veo_prompt = f"Animate this scene: {scene_desc[:200]}" if scene_desc else f"Animate: {segment[:100]}"
+                    
+                    try:
+                        generated_video = self.video_generator.generate_video_from_image(
+                            prompt=veo_prompt,
+                            image_path=generated_image,
+                            output_path=video_clip_path,
+                            duration_seconds=5
+                        )
+                        if generated_video:
+                            logger.info(f"Generated Veo video for segment {i+1}")
+                        else:
+                            logger.warning(f"Veo video generation failed for segment {i+1}, will use static image")
+                            video_clip_path = None
+                    except Exception as e:
+                        logger.error(f"Error generating Veo video for segment {i+1}: {e}")
+                        video_clip_path = None
+                
                 # Voice Generation
                 report_progress(f"Processing segment {i+1}/{len(segments)}: Generating Voice...", current_loop_progress + (progress_per_segment * 0.6), total_steps)
                 
@@ -120,6 +154,7 @@ class VideoGenerationPipeline:
                 # Store scene with screenplay data
                 scenes.append({
                     'image': generated_image,
+                    'video_clip': video_clip_path,  # NEW: Veo-generated video clip (if available)
                     'audio': generated_audio,
                     'text': full_spoken_text, # Use spoken text for subtitles
                     'screenplay': screenplay, 
