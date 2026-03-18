@@ -1,0 +1,38 @@
+# Environment & secrets
+.env
+.env.*
+secrets/
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Output/generated files (large media)
+output/
+assets/
+*.mp4
+*.mp3
+*.png
+*.jpg
+*.srt
+*.pdf
+
+# Logs
+*.log
+api_startup.log
+simulation.log
+
+# macOS
+.DS_Store
+**/.DS_Store
+
+# IDE
+.idea/
+.vscode/
+
+# Claude AI config (local)
+.claude/
